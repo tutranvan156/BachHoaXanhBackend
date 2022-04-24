@@ -1,16 +1,14 @@
 package ptit.example.bachhoaxanhbackend.service;
 
-import ptit.example.bachhoaxanhbackend.model.Product;
-
-import java.util.List;
+import org.springframework.stereotype.Service;
 
 /**
  * Project: BachHoaXanhBackend
  * Author: Tran Van Tu
- * Date: 3/2/2022 10:18 PM
+ * Date: 3/2/2022 10:19 PM
  * Desc:
  */
-public interface ProductService {
-    List<Product> findProduct();
+@Service
+public class ProductService {
 
 }
