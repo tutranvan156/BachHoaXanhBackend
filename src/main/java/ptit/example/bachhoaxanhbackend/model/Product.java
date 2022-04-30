@@ -3,7 +3,10 @@ package ptit.example.bachhoaxanhbackend.model;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 /**
  * Project: BachHoaXanhBackend
@@ -11,11 +14,30 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * Date: 3/2/2022 9:53 PM
  * Desc:
  */
-@Document(collection = "product")
 @Data
+@Document(collection = "product")
 public class Product {
     @Id
-    private String id;
-    @Field(value = "productName")
-    private String productName;
+    private String productID;
+    @NotEmpty
+    private String name;
+    @Positive
+    private int price;
+    @Positive
+    private int quantity;
+    private String typeID;
+    private double discountPercent;
+    private long dateMFG;
+    private long dateEXP;
+    private String description;
+    private String branch;
+    private String origin;
+    private String ingredient;
+    private long dateDiscountStart;
+    private long dateDiscountEnd;
+    @NotNull
+    private enum productStatus {
+        ENABLE,
+        DISABLE
+    }
 }

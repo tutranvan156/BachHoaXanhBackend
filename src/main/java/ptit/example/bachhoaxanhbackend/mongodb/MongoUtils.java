@@ -11,7 +11,9 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
+import org.springframework.stereotype.Component;
 import ptit.example.bachhoaxanhbackend.model.User;
 
 import java.util.ArrayList;
@@ -28,6 +30,8 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
  * Desc:
  */
 public class MongoUtils {
+    public static MongoDatabase database = getDataBase();
+
     public static MongoDatabase getDataBase() {
         ConnectionString connectionString = new ConnectionString("mongodb+srv://vantu:vantu@cluster0.ujfub.mongodb.net/BackHoaXanhAltas?retryWrites=true&w=majority");
         CodecRegistry pojoCodecRegistry = fromProviders(PojoCodecProvider.builder().automatic(true).build());
@@ -41,17 +45,21 @@ public class MongoUtils {
                 .build();
         MongoClient mongoClient = MongoClients.create(settings);
         MongoDatabase database = mongoClient.getDatabase("BachHoaXanhAltas");
-        MongoCollection<User> users = database.getCollection("user", User.class);
 
         return database;
     }
-    public static void createCollection(String collectionName) {
-        MongoDatabase database = getDataBase();
-        if (database.listCollectionNames().into(new ArrayList<>()).contains(collectionName)) {
-            System.out.println("Database existed");
-        } else {
-            database.createCollection(collectionName);
-        }
+
+    public static MongoDatabase getInstance() {
+        return database;
     }
+//    public static void createCollection(String collectionName) {
+//        MongoDatabase database = getDataBase();
+//        if (database.listCollectionNames().into(new ArrayList<>()).contains(collectionName)) {
+//            System.out.println("Database existed");
+//        } else {
+//            database.createCollection(collectionName);
+//        }
+//    }
+
 
 }

@@ -4,14 +4,12 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 import ptit.example.bachhoaxanhbackend.model.Product;
 
-import java.util.List;
-
 /**
  * Project: BachHoaXanhBackend
  * Author: Tran Van Tu
- * Date: 3/2/2022 9:56 PM
+ * Date: 4/28/2022 9:58 AM
  * Desc:
  */
-//@Repository
-//public interface ProductRepository extends AbstractRepository<Product, String> {
-//}
+@Repository
+public interface ProductRepository extends MongoRepository<Product, String> {
+}
