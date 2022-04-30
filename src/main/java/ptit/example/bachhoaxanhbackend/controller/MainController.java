@@ -27,7 +27,7 @@ public class MainController {
 
     @GetMapping("/products")
     List<Product> findProduct() throws IllegalAccessException {
-        MongoUtils.createCollection("order");
+//        MongoUtils.createCollection("order");
 //        return this.productServiceImpl.findProduct();
         return null;
     }

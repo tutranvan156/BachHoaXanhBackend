@@ -1,10 +1,10 @@
 package ptit.example.bachhoaxanhbackend.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
 
 /**
  * Project: BachHoaXanhBackend
@@ -12,18 +12,25 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * Date: 4/23/2022 9:54 PM
  * Desc:
  */
-@AllArgsConstructor
-@NoArgsConstructor
-@Document(collection = "user")
 @Data
+@Document(collection = "user")
 public class User {
-
     @Id
-    private String id;
-    private String firstName;
-    private String lastName;
+    private String userID;
+    private String fullName;
     private String username;
-    private String hashPassword;
+    private String password;
     private String address;
+    private String phoneNumber;
+    private enum userType {
+        USER,
+        EMP
+    }
     private String shippingAddress;
+    private enum userStatus {
+        LOGIN,
+        LOGOUT
+    }
+    private List<Cart> userListCart;
+    private List<Voucher> userListVoucher;
 }
