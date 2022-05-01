@@ -36,7 +36,8 @@ public class Product {
     private long dateDiscountStart;
     private long dateDiscountEnd;
     @NotNull
-    private enum productStatus {
+    private String status;
+    public enum productStatus {
         ENABLE,
         DISABLE
     }
