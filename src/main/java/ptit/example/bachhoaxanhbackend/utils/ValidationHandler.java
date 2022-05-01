@@ -1,4 +1,4 @@
-package ptit.example.bachhoaxanhbackend.util;
+package ptit.example.bachhoaxanhbackend.utils;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -31,4 +31,5 @@ public class ValidationHandler extends ResponseEntityExceptionHandler {
         });
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
+
 }

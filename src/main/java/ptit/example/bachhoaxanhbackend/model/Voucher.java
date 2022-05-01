@@ -4,7 +4,8 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
 
 /**
  * Project: BachHoaXanhBackend
@@ -17,15 +18,21 @@ import java.util.Date;
 public class Voucher {
     @Id
     private String voucherID;
+    @NotEmpty
     private String code;
+    @Positive
     private int quantity;
     private String description;
+    @Positive
     private Double discountValue;
-    private Date dateStart;
-    private Date dateEnd;
-    private String productID;
+    @Positive
+    private long dateStart;
+    @Positive
+    private long dateEnd;
     private String maxDiscountValue;
-    private enum voucherStatus {
+    private String status = VoucherStatus.ENABLE.name();
+
+    public enum VoucherStatus {
         ENABLE,
         DISABLE
     }

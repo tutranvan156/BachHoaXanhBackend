@@ -1,13 +1,24 @@
 package ptit.example.bachhoaxanhbackend.controller;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.client.MongoDatabase;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ptit.example.bachhoaxanhbackend.dto.UserPasswordDTO;
 import ptit.example.bachhoaxanhbackend.model.User;
-import ptit.example.bachhoaxanhbackend.service.UserService;
+import ptit.example.bachhoaxanhbackend.mongodb.MongoUtils;
+import ptit.example.bachhoaxanhbackend.repository.UserRepository;
+import ptit.example.bachhoaxanhbackend.utils.JavaMailSender;
+import ptit.example.bachhoaxanhbackend.utils.RespondCode;
+import ptit.example.bachhoaxanhbackend.utils.Utils;
 
-import java.util.List;
+import javax.mail.MessagingException;
+import javax.validation.Valid;
+import java.io.IOException;
+import java.util.Optional;
 
 /**
  * Project: BachHoaXanhBackend
@@ -16,30 +27,108 @@ import java.util.List;
  * Desc:
  */
 @RestController
-public class UserController {
+@RequestMapping("/users")
+public class UserController extends AbstractController {
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
-    @GetMapping("/users/find-all")
-    private ResponseEntity<User> findAll() {
-        return null;
+
+    @GetMapping("/find-all")
+    private ResponseEntity<?> findAll() {
+        return new ResponseEntity<>(this.userRepository.findAll(), HttpStatus.OK);
     }
 
+    @GetMapping("/load/{id}")
+    private ResponseEntity<?> load(@PathVariable("id") String id) {
+        return new ResponseEntity<>(this.userRepository.findById(id), HttpStatus.OK);
+    }
 
+    @PostMapping("/add")
+    private ResponseEntity<?> addUser(@Valid @RequestBody User user) {
+        user.setStatus(User.UserStatus.ENABLE.name());
+        return new ResponseEntity<>(this.userRepository.save(user), HttpStatus.OK);
+    }
 
-//    @PostMapping("/users/add")
-//    private ResponseEntity<?> addUser(@RequestBody User user) {
-//        return new ResponseEntity<>(this.userService.addUser(user), HttpStatus.OK);
-//    }
+    @DeleteMapping("/delete/{id}")
+    private ResponseEntity<?> delete(@PathVariable("id") String id) {
 
-//    @GetMapping("/users/remove/{id}")
-//    public ResponseEntity<?> removeUser(@PathVariable("id") String id) {
-////        if (this.userRepository.findById(id) != null) {
-//////            this.userService.removeUser(id);
-////            return new ResponseEntity<>(id, HttpStatus.OK);
-////        } else {
-////        }
-//            return new ResponseEntity<>("", HttpStatus.NOT_FOUND);
-//    }
+        Optional<User> user = this.userRepository.findById(id);
+        if (user.isPresent()) {
+            user.get().setStatus(User.UserStatus.DISABLE.name());
+            return new ResponseEntity<>(this.userRepository.save(user.get()), HttpStatus.OK);
+        } else {
+            return RespondCode.NOT_FOUND;
+        }
+    }
+
+    @PutMapping("update/{id}")
+    private ResponseEntity<?> update(@PathVariable("id") String id, @RequestBody User user) {
+        try {
+            User currentUser = this.userRepository.findById(id).get();
+            //which field we allow user to update then change this under here
+            currentUser.setFullName(user.getFullName());
+            currentUser.setShippingAddress(user.getShippingAddress());
+            currentUser.setAddress(user.getAddress());
+            currentUser.setPhoneNumber(user.getPhoneNumber());
+            currentUser.setStatus(user.getStatus());
+            return new ResponseEntity<>(this.userRepository.save(currentUser), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * This method will generate otp number, It will update this in database,
+     * And then send this otp to userEmail
+     *
+     * @param
+     * @return
+     */
+    @PostMapping("/forgot-password")
+    private ResponseEntity<?> updateOTP(@RequestBody UserPasswordDTO userPasswordDTO) {
+        //Get otp code
+        String otp = Utils.generateOTP();
+        //Send to customer email
+        if (userPasswordDTO.getEmailAddress() == null) {
+            return new ResponseEntity<>("emailAddress_not_found", HttpStatus.NOT_FOUND);
+        } else {
+            try {
+                JavaMailSender.sendMail(otp, userPasswordDTO.getEmailAddress());
+                //update otp code in database
+                MongoDatabase database = MongoUtils.getInstance();
+                BasicDBObject search = new BasicDBObject();
+                search.append("_id", new ObjectId(userPasswordDTO.getId()));
+                BasicDBObject update = new BasicDBObject();
+                update.append("$set", new BasicDBObject().append("otp", otp));
+                database.getCollection("user").updateOne(search, update);
+                //return success result
+                return new ResponseEntity<>(RespondCode.SUCCESS, HttpStatus.OK);
+            } catch (MessagingException | IOException e) {
+                return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            }
+
+        }
+    }
+
+    /**
+     * This method need id, otp and new password
+     * @param userPasswordDTO
+     * @return
+     */
+    @PostMapping("/update-password")
+    private ResponseEntity<?> updatePassword(@RequestBody UserPasswordDTO userPasswordDTO) {
+        Optional<User> temp = this.userRepository.findById(userPasswordDTO.getId());
+        if (temp.isPresent()) {
+            User user = temp.get();
+            if (user.getOtp().equals(userPasswordDTO.getOtp())) {
+                user.setPassword(userPasswordDTO.getPassword());
+                return new ResponseEntity<>(this.userRepository.save(user), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(RespondCode.NOT_EQUALS, HttpStatus.NOT_ACCEPTABLE);
+            }
+        } else {
+            return RespondCode.NOT_FOUND;
+        }
+    }
 }

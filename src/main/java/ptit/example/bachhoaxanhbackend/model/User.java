@@ -3,7 +3,9 @@ package ptit.example.bachhoaxanhbackend.model;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import ptit.example.bachhoaxanhbackend.dto.ProductCart;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 /**
@@ -17,20 +19,34 @@ import java.util.List;
 public class User {
     @Id
     private String userID;
+    @NotEmpty
     private String fullName;
+    @NotEmpty
+    private String emailAddress;
+    @NotEmpty
     private String username;
+    @NotEmpty
     private String password;
     private String address;
     private String phoneNumber;
+    private String status;
+    @NotEmpty
+    private String userType;
+    private String otp;
     private enum userType {
         USER,
         EMP
     }
+    @NotEmpty
     private String shippingAddress;
-    private enum userStatus {
+    public enum UserStatus {
+        DISABLE,
+        ENABLE
+    }
+    public enum UserLoginStatus {
         LOGIN,
         LOGOUT
     }
-    private List<Cart> userListCart;
+    private List<ProductCart> userListCart;
     private List<Voucher> userListVoucher;
 }
