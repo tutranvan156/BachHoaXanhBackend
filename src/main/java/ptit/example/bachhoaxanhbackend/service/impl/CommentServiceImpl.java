@@ -60,7 +60,7 @@ public class CommentServiceImpl implements CommentService {
     public void delete(String commentId) {
         if(this.commentRepository.existsById(commentId)) {
             this.commentRepository.deleteById(commentId);
-            Log.println("CommentService.delete with commentId=" + commentId + " success");
+            Log.println("CommentService.delete by commentId=" + commentId + " success");
             return;
         }
         throw new NotFoundException("CommentId not found");
