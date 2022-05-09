@@ -74,6 +74,13 @@ public class ImageController {
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
+    @GetMapping("/save-files/users/{filename:.+}")
+    public ResponseEntity<?> serveFileProduct(@PathVariable String filename) {
+
+        Resource file = storageService.loadUserImage(filename);
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+    }
 
     @PostMapping("/")
     public ResponseEntity<?> handleFileUpload(@RequestParam("file") MultipartFile file,
