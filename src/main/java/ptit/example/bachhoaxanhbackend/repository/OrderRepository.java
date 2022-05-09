@@ -2,13 +2,14 @@ package ptit.example.bachhoaxanhbackend.repository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
+import ptit.example.bachhoaxanhbackend.model.Order;
 
 /**
  * Project: BachHoaXanhBackend
  * Author: Tran Van Tu
- * Date: 4/30/2022 10:46 PM
+ * Date: 5/8/2022 2:22 PM
  * Desc:
  */
 @Repository
-public interface CartRepository extends MongoRepository<Cart, String> {
+public interface OrderRepository extends MongoRepository<Order, String> {
 }

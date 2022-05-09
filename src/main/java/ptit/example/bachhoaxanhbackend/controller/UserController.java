@@ -18,6 +18,7 @@ import ptit.example.bachhoaxanhbackend.utils.Utils;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 
 /**
@@ -34,7 +35,7 @@ public class UserController extends AbstractController {
     private UserRepository userRepository;
 
 
-    @GetMapping("/find-all")
+    @GetMapping("/all")
     private ResponseEntity<?> findAll() {
         return new ResponseEntity<>(this.userRepository.findAll(), HttpStatus.OK);
     }
@@ -47,6 +48,7 @@ public class UserController extends AbstractController {
     @PostMapping("/add")
     private ResponseEntity<?> addUser(@Valid @RequestBody User user) {
         user.setStatus(User.UserStatus.ENABLE.name());
+        user.setUserListCart(new ArrayList<>());
         return new ResponseEntity<>(this.userRepository.save(user), HttpStatus.OK);
     }
 
@@ -102,6 +104,7 @@ public class UserController extends AbstractController {
                 BasicDBObject update = new BasicDBObject();
                 update.append("$set", new BasicDBObject().append("otp", otp));
                 database.getCollection("user").updateOne(search, update);
+
                 //return success result
                 return new ResponseEntity<>(RespondCode.SUCCESS, HttpStatus.OK);
             } catch (MessagingException | IOException e) {
@@ -113,6 +116,7 @@ public class UserController extends AbstractController {
 
     /**
      * This method need id, otp and new password
+     *
      * @param userPasswordDTO
      * @return
      */

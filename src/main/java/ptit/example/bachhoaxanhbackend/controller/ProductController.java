@@ -1,16 +1,14 @@
 package ptit.example.bachhoaxanhbackend.controller;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.client.MongoDatabase;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ptit.example.bachhoaxanhbackend.dto.ProductCart;
 import ptit.example.bachhoaxanhbackend.model.Product;
-import ptit.example.bachhoaxanhbackend.mongodb.MongoUtils;
+import ptit.example.bachhoaxanhbackend.model.User;
 import ptit.example.bachhoaxanhbackend.repository.ProductRepository;
+import ptit.example.bachhoaxanhbackend.repository.UserRepository;
 import ptit.example.bachhoaxanhbackend.service.ProductService;
 import ptit.example.bachhoaxanhbackend.utils.RespondCode;
 
@@ -32,6 +30,9 @@ public class ProductController {
     private ProductRepository productRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private ProductService productService;
 
     @GetMapping("all")
@@ -44,7 +45,7 @@ public class ProductController {
         return new ResponseEntity<>(this.productRepository.save(product), HttpStatus.OK);
     }
 
-    @GetMapping("load")
+    @GetMapping("load/{id}")
     private ResponseEntity<?> load(@PathVariable("id") String id) {
         Optional<Product> product = this.productRepository.findById(id);
         if (product.isPresent()) {
@@ -75,13 +76,22 @@ public class ProductController {
 
     /**
      * Each user will have one cart, in this cart we will store
-     * @param id is userId, using userId for more easy
+     * @param userID is userId, using userId for more easy
      * @// TODO: 5/1/2022 If have time, I will get userId in code, but now just let front provide userId for more easy
      * @param productCart
      * @return
      */
-    @PostMapping("add-to-cart/{id}")
-    private ResponseEntity<?> addProductToCart(@PathVariable("id") String id, @RequestBody ProductCart productCart) {
-        return null;
+    @PutMapping("add-to-cart/{userID}")
+    private ResponseEntity<?> addProductToCart(@PathVariable("userID") String userID, @Valid @RequestBody ProductCart productCart) {
+        Optional<User> tempUser = this.userRepository.findById(userID);
+        if (tempUser.isPresent()) {
+            User user = tempUser.get();
+            List<ProductCart> tempList = user.getUserListCart();
+            tempList.add(productCart);
+            return new ResponseEntity<>(this.userRepository.save(user), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(RespondCode.NOT_EXISTS, HttpStatus.NOT_FOUND);
+        }
     }
 }
+
