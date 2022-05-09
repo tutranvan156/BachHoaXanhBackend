@@ -22,11 +22,15 @@ public class Product {
     @NotEmpty
     private String name;
     @Positive
-    private int price;
+    @NotEmpty
+    private double price;
+    @Positive
+    private double priceDiscount;
+    @Positive
+    private double discountPercent;
     @Positive
     private int quantity;
     private String typeID;
-    private double discountPercent;
     private long dateMFG;
     private long dateEXP;
     private String description;
@@ -36,8 +40,8 @@ public class Product {
     private long dateDiscountStart;
     private long dateDiscountEnd;
     @NotNull
-    private String status;
-    public enum productStatus {
+    private String status = ProductStatus.ENABLE.name();
+    public enum ProductStatus {
         ENABLE,
         DISABLE
     }

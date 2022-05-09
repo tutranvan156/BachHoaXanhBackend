@@ -2,8 +2,10 @@ package ptit.example.bachhoaxanhbackend.model;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
 
@@ -19,17 +21,27 @@ public class Voucher {
     @Id
     private String voucherID;
     @NotEmpty
+    @Indexed(unique = true)
     private String code;
-    @Positive
-    private int quantity;
+
     private String description;
     @Positive
-    private Double discountValue;
+    private Double discountPercent;
+
+    @Positive
+    private Double maxDiscountValue;
+
+    /**
+     * two field below must get in format with millisecond
+     */
     @Positive
     private long dateStart;
     @Positive
     private long dateEnd;
-    private String maxDiscountValue;
+
+    @Min(0)
+    private int quantity;
+
     private String status = VoucherStatus.ENABLE.name();
 
     public enum VoucherStatus {

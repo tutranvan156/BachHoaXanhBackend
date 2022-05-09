@@ -1,5 +1,8 @@
 package ptit.example.bachhoaxanhbackend.utils;
 
+import ptit.example.bachhoaxanhbackend.model.Voucher;
+
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -19,5 +22,9 @@ public class Utils {
             result.append(numbers.charAt(random.nextInt(numbers.length())));
         }
         return result.toString();
+    }
+
+    public static void updateVoucher(List<Voucher> userVoucherLlist, List<Voucher> orderVouocherList) {
+
     }
 }
