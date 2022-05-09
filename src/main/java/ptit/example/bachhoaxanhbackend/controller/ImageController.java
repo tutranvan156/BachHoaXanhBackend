@@ -22,42 +22,36 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/images/")
 public class ImageController {
+    /*
+    * Gồm có:
+    * /all - xem danh sách tất cả các file tại thư mục upload-dir/
+    * /files/{filename:.+} - xem file tại thư mục upload-dir/
+    * /save-files/{filename:.+} - lưu file tại thư mục upload-dir/
+    * /add - (file:...) - thêm file tại thư mục upload-dir/
+    *
+    * /files/users - xem danh sách tất cả các file tại thư mục upload-dir/users/
+    * /files/users/{filename:.+} - xem file tại thư mục upload-dir/users/
+    * /save-files/users/{filename:.+} - lưu file tại thư mục upload-dir/users/ về máy
+    * /add/users - (file:...) - thêm file vào thư mục upload-dir/users/
+    *
+    * files/products - xem danh sách tất cả các file tại thư mục upload-dir/products/
+    * /files/products/{filename:.+} - xem file tại thư mục upload-dir/products/
+    * /save-files/products/{filename:.+} - lưu file tại thư mục upload-dir/products/ về máy
+    * /add/products - (file:...) - thêm file vào thư mục upload-dir/products
+    * */
+
     @Autowired
     private StorageService storageService;
 
-    @GetMapping("")
+    /*
+    * control file in upload-dir
+    * */
+
+    @GetMapping("/all")
     public ResponseEntity<?> listUploadedFiles() throws IOException {
 
         return new ResponseEntity<>(
                 storageService.loadAll().map(path -> MvcUriComponentsBuilder.fromMethodName(ImageController.class,"serveFile", path.getFileName().toString()).build().toUri().toString()), HttpStatus.OK);
-    }
-
-    @GetMapping("files/users")
-    public ResponseEntity<?> listUploadedUsersFiles() throws IOException {
-
-        return new ResponseEntity<>(
-                storageService.loadAllUsers().map(path -> MvcUriComponentsBuilder.fromMethodName(ImageController.class,"serveUserImageFile", path.getFileName().toString()).build().toUri().toString()), HttpStatus.OK);
-    }
-
-    @GetMapping("files/products")
-    public ResponseEntity<?> listUploadedProductsFiles() throws IOException {
-
-        return new ResponseEntity<>(
-                storageService.loadAllProducts().map(path -> MvcUriComponentsBuilder.fromMethodName(ImageController.class,"serveProductImageFile", path.getFileName().toString()).build().toUri().toString()), HttpStatus.OK);
-    }
-
-    @GetMapping("/files/users/{filename:.+}")
-    public ResponseEntity<?> serveUserImageFile(@PathVariable String filename) {
-
-        Resource file = storageService.loadUserImage(filename);
-        return new ResponseEntity<>(file, HttpStatus.OK);
-    }
-
-    @GetMapping("/files/products/{filename:.+}")
-    public ResponseEntity<?> serveProductImageFile(@PathVariable String filename) {
-
-        Resource file = storageService.loadProductImage(filename);
-        return new ResponseEntity<>(file, HttpStatus.OK);
     }
 
     @GetMapping("/files/{filename:.+}")
@@ -74,22 +68,86 @@ public class ImageController {
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
+
+    @PostMapping("/add")
+    public ResponseEntity<?> handleFileUpload(@RequestParam("file") MultipartFile file) {
+
+        storageService.store(file);
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    /*
+    * Control file in upload-dir/users
+    * */
+
+    @GetMapping("/files/users")
+    public ResponseEntity<?> listUploadedUsersFiles() throws IOException {
+
+        return new ResponseEntity<>(
+                storageService.loadAllUsers().map(path -> MvcUriComponentsBuilder.fromMethodName(ImageController.class,"serveUserImageFile", path.getFileName().toString()).build().toUri().toString()), HttpStatus.OK);
+    }
+
+    @GetMapping("/files/users/{filename:.+}")
+    public ResponseEntity<?> serveUserImageFile(@PathVariable String filename) {
+
+        Resource file = storageService.loadUserImage(filename);
+        return new ResponseEntity<>(file, HttpStatus.OK);
+    }
+
     @GetMapping("/save-files/users/{filename:.+}")
-    public ResponseEntity<?> serveFileProduct(@PathVariable String filename) {
+    public ResponseEntity<?> serveFileUser(@PathVariable String filename) {
 
         Resource file = storageService.loadUserImage(filename);
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
-    @PostMapping("/")
-    public ResponseEntity<?> handleFileUpload(@RequestParam("file") MultipartFile file,
-                                   RedirectAttributes redirectAttributes) {
+    @PostMapping("/add/users")
+    public ResponseEntity<?> handleUserImageFileUpload(@RequestParam("file") MultipartFile file) {
 
         storageService.storeUserImage(file);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    /*
+    * Control file in upload-dir/products
+    * */
+
+    @GetMapping("files/products")
+    public ResponseEntity<?> listUploadedProductsFiles() throws IOException {
+
+        return new ResponseEntity<>(
+                storageService.loadAllProducts().map(path -> MvcUriComponentsBuilder.fromMethodName(ImageController.class,"serveProductImageFile", path.getFileName().toString()).build().toUri().toString()), HttpStatus.OK);
+    }
+
+    @GetMapping("/files/products/{filename:.+}")
+    public ResponseEntity<?> serveProductImageFile(@PathVariable String filename) {
+
+        Resource file = storageService.loadProductImage(filename);
+        return new ResponseEntity<>(file, HttpStatus.OK);
+    }
+
+    @GetMapping("/save-files/products/{filename:.+}")
+    public ResponseEntity<?> serveFileProduct(@PathVariable String filename) {
+
+        Resource file = storageService.loadProductImage(filename);
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+    }
+
+    @PostMapping("/add/products")
+    public ResponseEntity<?> handleProductImageFileUpload(@RequestParam("file") MultipartFile file) {
+
+        storageService.storeProductImage(file);
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    /*
+    * Exception handler
+    * */
 
     @ExceptionHandler(StorageFileNotFoundException.class)
     public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
