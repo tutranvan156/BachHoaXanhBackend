@@ -25,7 +25,7 @@ public class ImageController {
     @Autowired
     private StorageService storageService;
 
-    @GetMapping()
+    @GetMapping("")
     public ResponseEntity<?> listUploadedFiles() throws IOException {
 
         return new ResponseEntity<>(

@@ -34,6 +34,6 @@ public class OrderService {
             tempSum += item.getPrice();
         }
         currentOrder.setTotalMoney(tempSum);
-        return
+        return null;
     }
 }

@@ -1,22 +1,17 @@
 package ptit.example.bachhoaxanhbackend.service.impl;
 
-import com.sun.org.apache.bcel.internal.generic.ATHROW;
-import org.graalvm.compiler.hotspot.replacements.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.NoTransactionException;
 import org.webjars.NotFoundException;
 import ptit.example.bachhoaxanhbackend.dto.ProductCommentDTO;
 import ptit.example.bachhoaxanhbackend.dto.UserCommentDTO;
 import ptit.example.bachhoaxanhbackend.model.Comment;
-import ptit.example.bachhoaxanhbackend.model.Product;
 import ptit.example.bachhoaxanhbackend.repository.CommentRepository;
 import ptit.example.bachhoaxanhbackend.service.CommentService;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -60,7 +55,6 @@ public class CommentServiceImpl implements CommentService {
     public void delete(String commentId) {
         if(this.commentRepository.existsById(commentId)) {
             this.commentRepository.deleteById(commentId);
-            Log.println("CommentService.delete by commentId=" + commentId + " success");
             return;
         }
         throw new NotFoundException("CommentId not found");
@@ -71,7 +65,6 @@ public class CommentServiceImpl implements CommentService {
         try {
             return this.commentRepository.findById(id).get();
         } catch (NotFoundException e) {
-            Log.println("Database not found comment has id=" + id);
             throw new NotFoundException("Comment has id=" + id + " note found");
         }
     }
