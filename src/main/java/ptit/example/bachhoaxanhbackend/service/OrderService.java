@@ -1,6 +1,5 @@
 package ptit.example.bachhoaxanhbackend.service;
 
-import com.sun.xml.internal.ws.handler.HandlerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ptit.example.bachhoaxanhbackend.dto.ProductCart;
@@ -25,7 +24,7 @@ public class OrderService {
     @Autowired
     private ProductRepository productRepository;
 
-    private Order addOrder(Order currentOrder) throws HandlerException {
+    private Order addOrder(Order currentOrder)  {
 
         List<ProductCart> productCartList = currentOrder.getListProductCart();
         double tempSum = 0;
