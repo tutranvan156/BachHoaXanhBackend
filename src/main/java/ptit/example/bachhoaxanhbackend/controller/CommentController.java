@@ -19,27 +19,26 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/comments/")
 public class CommentController {
-
+    /*
+     * Gồm có
+     * - /all - xem tất cả
+     * - /load/commentID - xem 1 bình luận
+     * - /add - thêm một bình luận (userID, productID, content, date, startNumber)
+     * - không có chỉnh sửa bình luận
+     * - /delete/commentID - xóa 1 bình luận
+     * *****
+     * - /load/by-product/productID - xem tất cả bình luận của một sản phẩm
+     * - /load/by-user/userID - xem tất cả bình luận của một người dùng
+     * */
     @Autowired
     CommentService commentService;
-    /*
-    * Gồm có
-    * - GetMethod - xem tất cả
-    * - /commentID - xem 1 bình luận
-    * - PostMethod - thêm một bình luận (userID, productID, content, date, startNumber)
-    * - không có chỉnh sửa bình luận
-    * - DeleteMethod/commentID - xóa 1 bình luận
-    * *****
-    * - load-by-product/productID - xem tất cả bình luận của một sản phẩm
-    * - load-by-user/userID - xem tất cả bình luận của một người dùng
-    * */
 
-    @GetMapping
+    @GetMapping("all")
     private ResponseEntity<?> getAll() {
         return new ResponseEntity<>(this.commentService.findAll(), HttpStatus.OK);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("load/{id}")
     private ResponseEntity<?> getProductById(@PathVariable("id") String id) {
         try {
             return new ResponseEntity<>(this.commentService.findById(id), HttpStatus.OK);
@@ -49,12 +48,12 @@ public class CommentController {
         }
     }
 
-    @PostMapping
+    @PostMapping("add")
     private ResponseEntity<?> addProduct(@Valid @RequestBody Comment comment) {
         return new ResponseEntity<>(this.commentService.insert(comment), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("delete/{id}")
     private ResponseEntity<?> delete(@PathVariable("id") String id) {
         try {
             this.commentService.delete(id);
@@ -70,12 +69,12 @@ public class CommentController {
 
     }
 
-    @GetMapping("/load-by-product/{productId}")
+    @GetMapping("load/by-product/{productId}")
     private ResponseEntity<?> getCommentsByProduct(@PathVariable("productId") String id) {
         return new ResponseEntity<>(this.commentService.findAllByProductId(id), HttpStatus.OK);
     }
 
-    @GetMapping("/load-by-user/{userId}")
+    @GetMapping("load/by-user/{userId}")
     private ResponseEntity<?> getCommentsByUser(@PathVariable("userId") String id) {
         return new ResponseEntity<>(this.commentService.findAllByUserId(id), HttpStatus.OK);
     }
