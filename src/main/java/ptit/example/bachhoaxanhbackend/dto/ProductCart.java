@@ -3,6 +3,7 @@ package ptit.example.bachhoaxanhbackend.dto;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
 
 /**
  * Project: BachHoaXanhBackend
@@ -17,15 +18,11 @@ public class ProductCart {
     private String picture;
     @NotEmpty
     private String productName;
-    @NotEmpty
+    @Positive
     private Double price;
+    @Positive
     private Double priceDiscount;
-    private long addDate;
-    private int quantity;
-    private String status = ProductCartStatus.SELECTED.name();
+    private long addDate = System.currentTimeMillis();
+    private int quantity = 1;
 
-    public enum ProductCartStatus {
-        SELECTED,
-        NOT_SELECTED
-    }
 }
