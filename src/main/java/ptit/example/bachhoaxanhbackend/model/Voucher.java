@@ -23,14 +23,15 @@ public class Voucher {
     @NotEmpty
     @Indexed(unique = true)
     private String code;
-
+    @Min(0)
+    private int quantity;
     private String description;
     @Positive
-    private Double discountPercent;
-
+    private Double discountValue;
     @Positive
     private Double maxDiscountValue;
 
+    private boolean isUse;
     /**
      * two field below must get in format with millisecond
      */
@@ -38,12 +39,7 @@ public class Voucher {
     private long dateStart;
     @Positive
     private long dateEnd;
-
-    @Min(0)
-    private int quantity;
-
     private String status = VoucherStatus.ENABLE.name();
-
     public enum VoucherStatus {
         ENABLE,
         DISABLE

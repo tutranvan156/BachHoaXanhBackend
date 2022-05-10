@@ -75,7 +75,7 @@ public class OrderService {
 
         //calculate discount using voucher
         Voucher voucher = currentOrder.getVoucher();
-        double discountVoucher = tempSum * voucher.getDiscountPercent() <= voucher.getMaxDiscountValue() ? tempSum * voucher.getDiscountPercent() : voucher.getMaxDiscountValue();
+        double discountVoucher = tempSum * voucher.getDiscountValue() / 100 <= voucher.getMaxDiscountValue() ? tempSum * voucher.getDiscountValue() / 100 : voucher.getMaxDiscountValue();
 
         Optional<User> tempUser = this.userRepository.findById(currentOrder.getUserID());
         User user = tempUser.get();

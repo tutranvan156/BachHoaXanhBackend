@@ -2,6 +2,7 @@ package ptit.example.bachhoaxanhbackend.model;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import ptit.example.bachhoaxanhbackend.dto.ProductCart;
 
@@ -24,9 +25,11 @@ public class User {
     @NotEmpty
     private String emailAddress;
     @NotEmpty
+    @Indexed(unique = true)
     private String username;
     @NotEmpty
     private String password;
+    @Indexed(unique = true)
     private String address;
     private String phoneNumber;
     private String status;
