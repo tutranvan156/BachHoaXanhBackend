@@ -45,4 +45,5 @@ public class Product {
         ENABLE,
         DISABLE
     }
+    private String image;
 }

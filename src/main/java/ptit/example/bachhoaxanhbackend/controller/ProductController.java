@@ -4,12 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ptit.example.bachhoaxanhbackend.dto.ProductCart;
 import ptit.example.bachhoaxanhbackend.model.Product;
 import ptit.example.bachhoaxanhbackend.model.User;
 import ptit.example.bachhoaxanhbackend.repository.ProductRepository;
 import ptit.example.bachhoaxanhbackend.repository.UserRepository;
 import ptit.example.bachhoaxanhbackend.service.ProductService;
+import ptit.example.bachhoaxanhbackend.service.UserService;
 import ptit.example.bachhoaxanhbackend.utils.RespondCode;
 
 import javax.validation.Valid;
@@ -27,13 +29,12 @@ import java.util.Optional;
 public class ProductController {
 
     @Autowired
+    ProductService productService;
+    @Autowired
     private ProductRepository productRepository;
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private ProductService productService;
 
     @GetMapping("all")
     private ResponseEntity<?> getAll() {
@@ -93,6 +94,26 @@ public class ProductController {
             return new ResponseEntity<>(RespondCode.NOT_EXISTS, HttpStatus.NOT_FOUND);
         }
     }
+    /*
+     * Update photo
+     * */
 
+    @GetMapping("/load-photo/{id}")
+    public ResponseEntity<?> getUserImage(@PathVariable("id") String id){
+
+        return new ResponseEntity<>(this.productService.getProductImage(id), HttpStatus.OK);
+    }
+
+    @PostMapping("/upload-photo/{id}")
+    public ResponseEntity<?> uploadUserImage(@PathVariable("id") String id, @RequestParam("file") MultipartFile file) {
+        this.productService.updateProductImage(file, id);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/delete-image/{id}")
+    public ResponseEntity<?> deleteUserImage(@PathVariable("id") String id){
+        this.productService.deleteProductImage(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
 

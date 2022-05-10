@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ptit.example.bachhoaxanhbackend.dto.UserPasswordDTO;
 import ptit.example.bachhoaxanhbackend.model.User;
 import ptit.example.bachhoaxanhbackend.mongodb.MongoUtils;
 import ptit.example.bachhoaxanhbackend.repository.UserRepository;
+import ptit.example.bachhoaxanhbackend.service.UserService;
 import ptit.example.bachhoaxanhbackend.utils.JavaMailSender;
 import ptit.example.bachhoaxanhbackend.utils.RespondCode;
 import ptit.example.bachhoaxanhbackend.utils.Utils;
@@ -33,6 +35,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserService userService;
 
 
     @GetMapping("/all")
@@ -155,5 +160,37 @@ public class UserController {
 //            return RespondCode.NOT_FOUND;
 //        }
 //    }
+
+
+    /*
+    * User register
+    * */
+
+    @PostMapping("register")
+    public ResponseEntity<?> register() {
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    /*
+    * Update photo
+    * */
+
+    @GetMapping("/load-photo/{id}")
+    public ResponseEntity<?> getUserImage(@PathVariable("id") String id){
+
+        return new ResponseEntity<>(userService.getUserImage(id), HttpStatus.OK);
+    }
+
+    @PostMapping("/upload-photo/{id}")
+    public ResponseEntity<?> uploadUserImage(@PathVariable("id") String id, @RequestParam("file") MultipartFile file) {
+        userService.updateUserImage(file, id);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/delete-image/{id}")
+    public ResponseEntity<?> deleteUserImage(@PathVariable("id") String id){
+        userService.deleteUserImage(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
 }
