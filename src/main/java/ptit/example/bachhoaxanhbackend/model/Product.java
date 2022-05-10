@@ -20,7 +20,6 @@ public class Product {
     @NotEmpty
     private String name;
     @Positive
-    @NotEmpty
     private double price;
     @Min(0)
     @Max(100)
@@ -42,5 +41,4 @@ public class Product {
         ENABLE,
         DISABLE
     }
-    private String image;
 }
