@@ -17,5 +17,7 @@ import java.util.List;
 public interface VoucherRepository extends MongoRepository<Voucher, String> {
     @Query("{$and : [{'dateStart' : {$lte : ?0}}, {'dateEnd' : {$gte : ?0}}, {'voucherStatus' : ?1}]}")
     List<Voucher> findVouchersBetweenDate(long date, String status);
+
+    List<Voucher> findAllByStatus(String status);
 }
 

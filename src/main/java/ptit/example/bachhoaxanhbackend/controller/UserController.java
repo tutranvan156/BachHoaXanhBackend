@@ -29,7 +29,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/users")
-public class UserController extends AbstractController {
+public class UserController {
 
     @Autowired
     private UserRepository userRepository;
@@ -135,4 +135,25 @@ public class UserController extends AbstractController {
             return RespondCode.NOT_FOUND;
         }
     }
+
+//    @PostMapping("/update-shipping-address/{userID}")
+//    private ResponseEntity<?> updatePassword(@PathVariable("userID") String userID, List<String> ) {
+//        Optional<User> temp = this.userRepository.findById(userID);
+//        if (temp.isPresent()) {
+//            User user = temp.get();
+//            List<String> shippingAddress = user.getShippingAddress();
+//
+//
+//
+//            if (user.getOtp().equals(userPasswordDTO.getOtp())) {
+//                user.setPassword(userPasswordDTO.getPassword());
+//                return new ResponseEntity<>(this.userRepository.save(user), HttpStatus.OK);
+//            } else {
+//                return new ResponseEntity<>(RespondCode.NOT_EQUALS, HttpStatus.NOT_ACCEPTABLE);
+//            }
+//        } else {
+//            return RespondCode.NOT_FOUND;
+//        }
+//    }
+
 }

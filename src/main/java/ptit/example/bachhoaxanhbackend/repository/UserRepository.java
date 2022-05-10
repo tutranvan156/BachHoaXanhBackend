@@ -4,6 +4,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 import ptit.example.bachhoaxanhbackend.model.User;
 
+import java.util.List;
+
 /**
  * Project: BachHoaXanhBackend
  * Author: Tran Van Tu
@@ -13,5 +15,4 @@ import ptit.example.bachhoaxanhbackend.model.User;
 
 @Repository
 public interface UserRepository extends MongoRepository<User, String> {
-
 }

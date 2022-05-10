@@ -15,5 +15,6 @@ public interface RespondCode {
     String EXISTED = "existed";
     String SUCCESS = "success";
     String NOT_EQUALS = "not_equals";
+    String OUT_OF_STOCK = "out_of_stock";
     public static final ResponseEntity<?> NOT_FOUND = new ResponseEntity<>(RespondCode.NOT_EXISTS, HttpStatus.OK);
 }
