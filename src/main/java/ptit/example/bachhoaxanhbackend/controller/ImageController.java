@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ptit.example.bachhoaxanhbackend.model.Product;
+import ptit.example.bachhoaxanhbackend.service.CategoryStorageService;
+import ptit.example.bachhoaxanhbackend.service.ProductService;
+import ptit.example.bachhoaxanhbackend.service.UserService;
 import ptit.example.bachhoaxanhbackend.storage.StorageFileNotFoundException;
 import ptit.example.bachhoaxanhbackend.storage.StorageService;
 
@@ -35,8 +39,10 @@ public class ImageController {
     * /add/products - (file:...) - thêm file vào thư mục upload-dir/products
     * */
 
-    @Autowired
-    private StorageService storageService;
+    @Autowired private StorageService storageService;
+    @Autowired private UserService userService;
+    @Autowired private ProductService productService;
+    @Autowired private CategoryStorageService categoryStorageService;
 
     /*
     * control file in upload-dir
