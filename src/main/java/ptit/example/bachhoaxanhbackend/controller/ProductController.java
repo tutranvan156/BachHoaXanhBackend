@@ -11,7 +11,6 @@ import ptit.example.bachhoaxanhbackend.model.User;
 import ptit.example.bachhoaxanhbackend.repository.ProductRepository;
 import ptit.example.bachhoaxanhbackend.repository.UserRepository;
 import ptit.example.bachhoaxanhbackend.service.ProductService;
-import ptit.example.bachhoaxanhbackend.service.UserService;
 import ptit.example.bachhoaxanhbackend.utils.RespondCode;
 
 import javax.validation.Valid;

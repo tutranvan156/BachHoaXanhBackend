@@ -2,6 +2,7 @@ package ptit.example.bachhoaxanhbackend.service.impl;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 import ptit.example.bachhoaxanhbackend.service.ProductService;
@@ -17,6 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+@Service
 public class ProductServiceImpl implements ProductService {
     private final Path productLocation;
 

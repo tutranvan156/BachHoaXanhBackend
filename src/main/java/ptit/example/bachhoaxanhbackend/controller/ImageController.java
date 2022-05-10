@@ -39,10 +39,14 @@ public class ImageController {
     * /add/products - (file:...) - thêm file vào thư mục upload-dir/products
     * */
 
-    @Autowired private StorageService storageService;
-    @Autowired private UserService userService;
-    @Autowired private ProductService productService;
-    @Autowired private CategoryStorageService categoryStorageService;
+    @Autowired
+    private StorageService storageService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private ProductService productService;
+    @Autowired
+    private CategoryStorageService categoryStorageService;
 
     /*
     * control file in upload-dir

@@ -1,18 +1,8 @@
 package ptit.example.bachhoaxanhbackend.service;
 
-import com.mongodb.client.MongoCollection;
-import org.bson.Document;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-import ptit.example.bachhoaxanhbackend.model.Voucher;
-import ptit.example.bachhoaxanhbackend.mongodb.MongoUtils;
 import ptit.example.bachhoaxanhbackend.repository.VoucherRepository;
-
-import java.util.List;
 
 /**
  * Project: BachHoaXanhBackend

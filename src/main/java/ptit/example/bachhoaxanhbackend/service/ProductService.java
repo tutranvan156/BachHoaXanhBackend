@@ -3,10 +3,8 @@ package ptit.example.bachhoaxanhbackend.service;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ptit.example.bachhoaxanhbackend.model.Product;
 
 import java.nio.file.Path;
-import java.util.List;
 
 /**
  * Project: BachHoaXanhBackend
