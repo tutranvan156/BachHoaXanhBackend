@@ -43,17 +43,17 @@ public class CategoryController {
         }
     }
 
-//    @PutMapping("update/{id}")
-//    private ResponseEntity<?> update(@PathVariable("id") String id, @RequestBody ProductType productType) {
-//        Optional<ProductType> tempProductType = this.productTypeRepository.findById(id);
-//        if (tempProductType.isPresent()) {
-//            ProductType currentProductType = tempProductType.get();
-//            currentProductType.setTypeName(productType.getTypeName());
-//            return new ResponseEntity<>(this.productTypeRepository.save(currentProductType), HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>(RespondCode.NOT_EXISTS, HttpStatus.NOT_FOUND);
-//        }
-//    }
+    @PutMapping("update/{id}")
+    private ResponseEntity<?> update(@PathVariable("id") String id, @RequestBody Category category) {
+        Optional<Category> tempCategory = this.productTypeRepository.findById(id);
+        if (tempCategory.isPresent()) {
+            Category currentCategory = tempCategory.get();
+            currentCategory.setName(category.getName());
+            return new ResponseEntity<>(this.productTypeRepository.save(currentCategory), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(RespondCode.NOT_EXISTS, HttpStatus.NOT_FOUND);
+        }
+    }
 
     @DeleteMapping("delete/{id}")
     private ResponseEntity<?> delete(@PathVariable("id") String id) {
