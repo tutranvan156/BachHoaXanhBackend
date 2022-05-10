@@ -29,7 +29,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/users")
-public class UserController extends AbstractController {
+public class UserController {
 
     @Autowired
     private UserRepository userRepository;
