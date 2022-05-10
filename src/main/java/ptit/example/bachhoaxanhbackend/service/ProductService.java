@@ -1,8 +1,11 @@
 package ptit.example.bachhoaxanhbackend.service;
 
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import ptit.example.bachhoaxanhbackend.model.Product;
 
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -12,6 +15,12 @@ import java.util.List;
  * Desc:
  */
 @Service
-public class ProductService {
+public interface ProductService {
+    void updateProductImage(MultipartFile file, String productId);
 
+    Path getProductImageLocation(String filename);
+
+    Resource getProductImage(String filename);
+
+    void deleteProductImage(String filename);
 }
