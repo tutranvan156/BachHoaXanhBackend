@@ -9,7 +9,6 @@ import ptit.example.bachhoaxanhbackend.model.Product;
 import ptit.example.bachhoaxanhbackend.model.User;
 import ptit.example.bachhoaxanhbackend.repository.ProductRepository;
 import ptit.example.bachhoaxanhbackend.repository.UserRepository;
-import ptit.example.bachhoaxanhbackend.service.ProductService;
 import ptit.example.bachhoaxanhbackend.utils.RespondCode;
 
 import javax.validation.Valid;
@@ -32,12 +31,9 @@ public class ProductController {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private ProductService productService;
-
     @GetMapping("all")
     private ResponseEntity<?> getAll() {
-        return new ResponseEntity<>(this.productRepository.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(this.productRepository.findAllByStatus(Product.ProductStatus.ENABLE.name()), HttpStatus.OK);
     }
 
     @PostMapping("add")
@@ -49,7 +45,7 @@ public class ProductController {
     private ResponseEntity<?> load(@PathVariable("id") String id) {
         Optional<Product> product = this.productRepository.findById(id);
         if (product.isPresent()) {
-            return new ResponseEntity<>(product, HttpStatus.OK);
+            return new ResponseEntity<>(product.get(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(RespondCode.NOT_EXISTS, HttpStatus.NOT_FOUND);
         }
@@ -60,31 +56,43 @@ public class ProductController {
         Product currentProduct = this.productRepository.findById(id).get();
         //which field we allow user to update then change this under here
         currentProduct.setName(product.getName());
+        currentProduct.setPrice(product.getPrice());
+        currentProduct.setPriceDiscount(product.getPriceDiscount());
+        currentProduct.setQuantity(product.getQuantity());
+        currentProduct.setDescription(product.getDescription());
 
         return new ResponseEntity<>(this.productRepository.save(currentProduct), HttpStatus.OK);
     }
 
     @DeleteMapping("delete/{id}")
     private ResponseEntity<?> delete(@PathVariable("id") String id) {
-        try {
-            this.productRepository.deleteById(id);
-            return new ResponseEntity<>(RespondCode.SUCCESS, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        Optional<Product> tempProduct = this.productRepository.findById(id);
+        if (tempProduct.isPresent()) {
+            Product product = tempProduct.get();
+            product.setStatus(Product.ProductStatus.DISABLE.name());
+            return new ResponseEntity<>(this.productRepository.save(product), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(RespondCode.NOT_EXISTS, HttpStatus.NOT_FOUND);
         }
     }
 
     /**
      * Each user will have one cart, in this cart we will store
-     * @param userID is userId, using userId for more easy
-     * @// TODO: 5/1/2022 If have time, I will get userId in code, but now just let front provide userId for more easy
+     *
+     * @param userID      is userId, using userId for more easy
      * @param productCart
      * @return
+     * @// TODO: 5/1/2022 If have time, I will get userId in code, but now just let front provide userId for more easy
      */
     @PutMapping("add-to-cart/{userID}")
     private ResponseEntity<?> addProductToCart(@PathVariable("userID") String userID, @Valid @RequestBody ProductCart productCart) {
         Optional<User> tempUser = this.userRepository.findById(userID);
-        if (tempUser.isPresent()) {
+        Optional<Product> tempProduct = this.productRepository.findById(productCart.getProductID());
+        if (tempUser.isPresent() && tempProduct.isPresent()) {
+            Product product = tempProduct.get();
+            if (product.getStatus().equals(Product.ProductStatus.DISABLE.name())) {
+                return new ResponseEntity<>(RespondCode.INVALID, HttpStatus.BAD_REQUEST);
+            }
             User user = tempUser.get();
             List<ProductCart> tempList = user.getUserListCart();
             tempList.add(productCart);
@@ -94,5 +102,14 @@ public class ProductController {
         }
     }
 
+    /**
+     * Get all product base on productTypeName
+     * @param productTypeName
+     * @return
+     */
+    @GetMapping("get-by-type/{productTypeName}")
+    private ResponseEntity<?> getAllByTypeName(@PathVariable("productTypeName") String productTypeName) {
+        return new ResponseEntity<>(this.productRepository.findAllByProductTypeName(productTypeName), HttpStatus.OK);
+    }
 }
 
