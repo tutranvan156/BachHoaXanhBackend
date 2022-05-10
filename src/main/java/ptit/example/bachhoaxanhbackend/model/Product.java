@@ -4,9 +4,7 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.*;
 
 /**
  * Project: BachHoaXanhBackend
@@ -24,13 +22,14 @@ public class Product {
     @Positive
     @NotEmpty
     private double price;
-    @Positive
+    @Min(0)
     private double priceDiscount;
-    @Positive
+    @Min(0)
+    @Max(100)
     private double discountPercent;
-    @Positive
+    @Min(0)
     private int quantity;
-    private String typeID;
+    private String productTypeName;
     private long dateMFG;
     private long dateEXP;
     private String description;
@@ -39,7 +38,6 @@ public class Product {
     private String ingredient;
     private long dateDiscountStart;
     private long dateDiscountEnd;
-    @NotNull
     private String status = ProductStatus.ENABLE.name();
     public enum ProductStatus {
         ENABLE,
