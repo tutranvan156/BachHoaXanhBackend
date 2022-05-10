@@ -23,13 +23,12 @@ public class Product {
     @NotEmpty
     private double price;
     @Min(0)
-    private double priceDiscount;
-    @Min(0)
     @Max(100)
     private double discountPercent;
     @Min(0)
     private int quantity;
-    private String productTypeName;
+    private String categoryID;
+    private String categoryName;
     private long dateMFG;
     private long dateEXP;
     private String description;

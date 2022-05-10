@@ -2,7 +2,7 @@ package ptit.example.bachhoaxanhbackend.repository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
-import ptit.example.bachhoaxanhbackend.model.ProductType;
+import ptit.example.bachhoaxanhbackend.model.Category;
 
 import java.util.List;
 
@@ -13,6 +13,6 @@ import java.util.List;
  * Desc:
  */
 @Repository
-public interface ProductTypeRepository extends MongoRepository<ProductType, String> {
-    List<ProductType> findAllByTypeStatus(String status);
+public interface CategoryRepository extends MongoRepository<Category, String> {
+    List<Category> findAllByTypeStatus(String status);
 }

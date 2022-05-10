@@ -57,7 +57,6 @@ public class ProductController {
         //which field we allow user to update then change this under here
         currentProduct.setName(product.getName());
         currentProduct.setPrice(product.getPrice());
-        currentProduct.setPriceDiscount(product.getPriceDiscount());
         currentProduct.setQuantity(product.getQuantity());
         currentProduct.setDescription(product.getDescription());
 
@@ -104,12 +103,12 @@ public class ProductController {
 
     /**
      * Get all product base on productTypeName
-     * @param productTypeName
+     * @param categoryName
      * @return
      */
-    @GetMapping("get-by-type/{productTypeName}")
-    private ResponseEntity<?> getAllByTypeName(@PathVariable("productTypeName") String productTypeName) {
-        return new ResponseEntity<>(this.productRepository.findAllByProductTypeName(productTypeName), HttpStatus.OK);
+    @GetMapping("get-by-category/{productTypeName}")
+    private ResponseEntity<?> getAllByTypeName(@PathVariable("productTypeName") String categoryName) {
+        return new ResponseEntity<>(this.productRepository.findAllByCategoryName(categoryName), HttpStatus.OK);
     }
 }
 

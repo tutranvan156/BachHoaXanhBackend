@@ -13,16 +13,15 @@ import javax.validation.constraints.NotEmpty;
  * Desc:
  */
 @Data
-@Document(collection = "type")
-public class ProductType {
+@Document(collection = "category")
+public class Category {
 
     @Id
-    private String typeID;
+    private String categoryID;
     @NotEmpty
-    private String typeName;
-    private String description;
-    private String typeStatus = TypeStatus.ENABLE.name();
-    public enum TypeStatus {
+    private String name;
+    private String typeStatus = CategoryStatus.ENABLE.name();
+    public enum CategoryStatus {
         ENABLE,
         DISABLE
     }
