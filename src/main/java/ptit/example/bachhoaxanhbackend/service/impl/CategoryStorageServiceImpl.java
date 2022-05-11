@@ -17,13 +17,26 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.stream.Stream;
 
 @Service
 public class CategoryStorageServiceImpl implements CategoryStorageService {
     private final Path categoryLocation;
 
     public CategoryStorageServiceImpl(StorageProperties properties) {
-        this.categoryLocation = Paths.get(properties.getLocation()).resolve("products");
+        this.categoryLocation = Paths.get(properties.getLocation()).resolve("categories");
+    }
+
+    @Override
+    public Stream<Path> loadAllCategoriesLocation() {
+        try {
+            return Files.walk(this.categoryLocation, 1)
+                    .filter(path -> !path.equals(this.categoryLocation))
+                    .map(this.categoryLocation::relativize);
+        }
+        catch (IOException e) {
+            throw new StorageException("Failed to read stored files", e);
+        }
     }
 
     @Override

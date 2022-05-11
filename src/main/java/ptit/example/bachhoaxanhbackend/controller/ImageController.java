@@ -96,22 +96,22 @@ public class ImageController {
     @GetMapping("/files/users/{filename:.+}")
     public ResponseEntity<?> serveUserImageFile(@PathVariable String filename) {
 
-        Resource file = storageService.loadUserImage(filename);
+        Resource file = this.userService.getUserImage(filename);
         return new ResponseEntity<>(file, HttpStatus.OK);
     }
 
     @GetMapping("/save-files/users/{filename:.+}")
     public ResponseEntity<?> serveFileUser(@PathVariable String filename) {
 
-        Resource file = storageService.loadUserImage(filename);
+        Resource file = this.userService.getUserImage(filename);
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
-    @PostMapping("/add/users")
-    public ResponseEntity<?> handleUserImageFileUpload(@RequestParam("file") MultipartFile file) {
+    @PostMapping("/add/users/{id}")
+    public ResponseEntity<?> handleUserImageFileUpload(@PathVariable("id") String id, @RequestParam("file") MultipartFile file) {
 
-        storageService.storeUserImage(file);
+        this.userService.updateUserImage(file, id);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -130,22 +130,56 @@ public class ImageController {
     @GetMapping("/files/products/{filename:.+}")
     public ResponseEntity<?> serveProductImageFile(@PathVariable String filename) {
 
-        Resource file = storageService.loadProductImage(filename);
+        Resource file = this.productService.getProductImage(filename);
         return new ResponseEntity<>(file, HttpStatus.OK);
     }
 
     @GetMapping("/save-files/products/{filename:.+}")
     public ResponseEntity<?> serveFileProduct(@PathVariable String filename) {
 
-        Resource file = storageService.loadProductImage(filename);
+        Resource file = this.productService.getProductImage(filename);
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
-    @PostMapping("/add/products")
-    public ResponseEntity<?> handleProductImageFileUpload(@RequestParam("file") MultipartFile file) {
+    @PostMapping("/add/products/{id}")
+    public ResponseEntity<?> handleProductImageFileUpload(@PathVariable("id") String id, @RequestParam("file") MultipartFile file) {
 
-        storageService.storeProductImage(file);
+        this.productService.updateProductImage(file, id);
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    /*
+    * Control file in upload-dir/categories
+    * */
+
+    @GetMapping("files/categories")
+    public ResponseEntity<?> listUploadedCategoryFiles() throws IOException {
+
+        return new ResponseEntity<>(
+                this.categoryStorageService.loadAllCategoriesLocation().map(path -> MvcUriComponentsBuilder.fromMethodName(ImageController.class,"serveCategoryImageFile", path.getFileName().toString()).build().toUri().toString()), HttpStatus.OK);
+    }
+
+    @GetMapping("/files/categories/{filename:.+}")
+    public ResponseEntity<?> serveCategoryImageFile(@PathVariable String filename) {
+
+        Resource file = this.categoryStorageService.getCategoryImage(filename);
+        return new ResponseEntity<>(file, HttpStatus.OK);
+    }
+
+    @GetMapping("/save-files/categories/{filename:.+}")
+    public ResponseEntity<?> serveFileCategory(@PathVariable String filename) {
+
+        Resource file = this.categoryStorageService.getCategoryImage(filename);
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+    }
+
+    @PostMapping("/add/categories/{id}")
+    public ResponseEntity<?> handleCategoryImageFileUpload(@PathVariable("id") String id, @RequestParam("file") MultipartFile file) {
+
+        this.categoryStorageService.updateCategoryImage(file, id);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
