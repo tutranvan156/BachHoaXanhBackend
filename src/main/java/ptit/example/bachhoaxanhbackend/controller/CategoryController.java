@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ptit.example.bachhoaxanhbackend.model.Category;
 import ptit.example.bachhoaxanhbackend.repository.CategoryRepository;
+import ptit.example.bachhoaxanhbackend.service.CategoryStorageService;
 import ptit.example.bachhoaxanhbackend.utils.RespondCode;
 
 import javax.validation.Valid;
@@ -65,5 +67,29 @@ public class CategoryController {
         } else {
             return new ResponseEntity<>(RespondCode.NOT_EXISTS, HttpStatus.NOT_FOUND);
         }
+    }
+
+    /*
+    *
+    * */
+    @Autowired
+    CategoryStorageService categoryStorageService;
+
+    @GetMapping("/load-photo/{id}")
+    public ResponseEntity<?> getUserImage(@PathVariable("id") String id){
+
+        return new ResponseEntity<>(this.categoryStorageService.getCategoryImage(id), HttpStatus.OK);
+    }
+
+    @PostMapping("/upload-photo/{id}")
+    public ResponseEntity<?> uploadUserImage(@PathVariable("id") String id, @RequestParam("file") MultipartFile file) {
+        this.categoryStorageService.updateCategoryImage(file, id);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/delete-image/{id}")
+    public ResponseEntity<?> deleteUserImage(@PathVariable("id") String id){
+        this.categoryStorageService.deleteCategoryImage(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
