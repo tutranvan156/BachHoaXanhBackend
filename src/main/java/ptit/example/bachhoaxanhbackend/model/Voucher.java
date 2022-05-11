@@ -20,6 +20,7 @@ import javax.validation.constraints.Positive;
 public class Voucher {
     @Id
     private String voucherID;
+    private String productID;
     @NotEmpty
     @Indexed(unique = true)
     private String code;
