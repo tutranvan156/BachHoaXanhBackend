@@ -154,8 +154,15 @@ public class ImageController {
     * Control file in upload-dir/categories
     * */
 
-    @GetMapping("files/categories")
+    @GetMapping("/categories/all")
     public ResponseEntity<?> listUploadedCategoryFiles() throws IOException {
+
+        return new ResponseEntity<>(
+                this.categoryStorageService.loadAllCategoriesLocation().map(path -> MvcUriComponentsBuilder.fromMethodName(ImageController.class,"serveCategoryImageFile", path.getFileName().toString()).build().toUri().toString()), HttpStatus.OK);
+    }
+
+    @GetMapping("files/categories")
+    public ResponseEntity<?> listUploadedCategoryFiles2() throws IOException {
 
         return new ResponseEntity<>(
                 this.categoryStorageService.loadAllCategoriesLocation().map(path -> MvcUriComponentsBuilder.fromMethodName(ImageController.class,"serveCategoryImageFile", path.getFileName().toString()).build().toUri().toString()), HttpStatus.OK);
