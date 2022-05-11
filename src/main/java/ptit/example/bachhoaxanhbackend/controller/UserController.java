@@ -20,6 +20,7 @@ import ptit.example.bachhoaxanhbackend.utils.Utils;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -51,9 +52,10 @@ public class UserController {
     }
 
     @PostMapping("/add")
-    private ResponseEntity<?> addUser(@Valid @RequestBody User user) {
+    private ResponseEntity<?> addUser(@Valid @RequestBody User user) throws NoSuchAlgorithmException {
         user.setStatus(User.UserStatus.ENABLE.name());
         user.setUserListCart(new ArrayList<>());
+        user.setUserListVoucher(new ArrayList<>());
         return new ResponseEntity<>(this.userRepository.save(user), HttpStatus.OK);
     }
 
@@ -74,12 +76,13 @@ public class UserController {
         try {
             User currentUser = this.userRepository.findById(id).get();
             //which field we allow user to update then change this under here
-            currentUser.setFullName(user.getFullName());
-            currentUser.setShippingAddress(user.getShippingAddress());
-            currentUser.setAddress(user.getAddress());
-            currentUser.setPhoneNumber(user.getPhoneNumber());
-            currentUser.setStatus(user.getStatus());
-            return new ResponseEntity<>(this.userRepository.save(currentUser), HttpStatus.OK);
+//            currentUser.setFullName(user.getFullName());
+//            currentUser.setShippingAddress(user.getShippingAddress());
+//            currentUser.setAddress(user.getAddress());
+//            currentUser.setPhoneNumber(user.getPhoneNumber());
+//            currentUser.setStatus(user.getStatus());
+//            user.setPassword(user.getPassword());
+            return new ResponseEntity<>(this.userRepository.save(user), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -126,7 +129,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/update-password")
-    private ResponseEntity<?> updatePassword(@RequestBody UserPasswordDTO userPasswordDTO) {
+    private ResponseEntity<?> updatePassword(@RequestBody UserPasswordDTO userPasswordDTO) throws NoSuchAlgorithmException {
         Optional<User> temp = this.userRepository.findById(userPasswordDTO.getId());
         if (temp.isPresent()) {
             User user = temp.get();

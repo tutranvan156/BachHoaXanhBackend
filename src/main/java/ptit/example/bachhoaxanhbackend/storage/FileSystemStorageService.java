@@ -209,6 +209,7 @@ public class FileSystemStorageService implements StorageService {
 			Files.createDirectories(this.rootLocation);
 			Files.createDirectories(this.userLocation);
 			Files.createDirectories(this.productLocation);
+			Files.createDirectories(this.rootLocation.resolve("categories"));
 		}
 		catch (IOException e) {
 			throw new StorageException("Could not initialize storage", e);

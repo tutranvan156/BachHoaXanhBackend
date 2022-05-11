@@ -57,14 +57,16 @@ public class ProductController {
 
     @PutMapping("update/{id}")
     private ResponseEntity<?> update(@PathVariable("id") String id, @RequestBody Product product) {
-        Product currentProduct = this.productRepository.findById(id).get();
+//        Product currentProduct = this.productRepository.findById(id).get();
         //which field we allow user to update then change this under here
-        currentProduct.setName(product.getName());
-        currentProduct.setPrice(product.getPrice());
-        currentProduct.setQuantity(product.getQuantity());
-        currentProduct.setDescription(product.getDescription());
+//        currentProduct.setName(product.getName());
+//        currentProduct.setPrice(product.getPrice());
+//        currentProduct.setQuantity(product.getQuantity());
+//        currentProduct.setDescription(product.getDescription());
+//        currentProduct.setBranch(product.getBranch());
+//        currentProduct.setIngredient(product.getIngredient());
 
-        return new ResponseEntity<>(this.productRepository.save(currentProduct), HttpStatus.OK);
+        return new ResponseEntity<>(this.productRepository.save(product), HttpStatus.OK);
     }
 
     @DeleteMapping("delete/{id}")
