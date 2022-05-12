@@ -37,4 +37,6 @@ public class Order {
     private Voucher voucher;
     @Positive
     private Double totalMoney;
+    private Double voucherDiscount;
+
 }
