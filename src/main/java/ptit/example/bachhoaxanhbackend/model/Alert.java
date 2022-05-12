@@ -21,5 +21,6 @@ public class Alert {
     private String userID;
     private String subject;
     private String content;
+    private boolean isRead;
     private long date;
 }
