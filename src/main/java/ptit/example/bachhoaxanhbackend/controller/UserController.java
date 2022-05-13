@@ -45,7 +45,7 @@ public class UserController {
 
     @GetMapping("/all")
     private ResponseEntity<?> findAll() {
-        return new ResponseEntity<>(this.userRepository.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(this.userRepository.findAllByStatus(User.UserStatus.ENABLE.name()), HttpStatus.OK);
     }
 
     @GetMapping("/load/{id}")
@@ -58,7 +58,8 @@ public class UserController {
         user.setStatus(User.UserStatus.ENABLE.name());
         user.setUserListCart(new ArrayList<>());
         user.setUserListVoucher(new ArrayList<>());
-        return new ResponseEntity<>(this.userRepository.save(user), HttpStatus.OK);
+        this.userRepository.save(user);
+        return new ResponseEntity<>(this.userRepository.findAllByStatus(User.UserStatus.ENABLE.name()), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -76,7 +77,7 @@ public class UserController {
     @PutMapping("update/{id}")
     private ResponseEntity<?> update(@PathVariable("id") String id, @RequestBody User user) {
         try {
-            User currentUser = this.userRepository.findById(id).get();
+//            User currentUser = this.userRepository.findById(id).get();
             //which field we allow user to update then change this under here
 //            currentUser.setFullName(user.getFullName());
 //            currentUser.setShippingAddress(user.getShippingAddress());
