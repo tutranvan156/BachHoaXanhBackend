@@ -81,7 +81,8 @@ public class OrderController {
         if (temp.isPresent()) {
             Order order = temp.get();
             order.setOrderStatus(Order.OrderStatus.DELIVERING.name());
-            return new ResponseEntity<>(this.orderRepository.save(order), HttpStatus.OK);
+            this.orderRepository.save(order);
+            return new ResponseEntity<>(this.orderRepository.findAll(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(RespondCode.NOT_FOUND, HttpStatus.NOT_FOUND);
         }
@@ -98,7 +99,8 @@ public class OrderController {
                 e.printStackTrace();
                 return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>(this.orderRepository.save(order), HttpStatus.OK);
+            this.orderRepository.save(order);
+            return new ResponseEntity<>(this.orderRepository.findAll(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(RespondCode.NOT_FOUND, HttpStatus.NOT_FOUND);
         }
@@ -110,7 +112,8 @@ public class OrderController {
         if (temp.isPresent()) {
             Order order = temp.get();
             order.setOrderStatus(Order.OrderStatus.RECEIVED.name());
-            return new ResponseEntity<>(this.orderRepository.save(order), HttpStatus.OK);
+            this.orderRepository.save(order);
+            return new ResponseEntity<>(this.orderRepository.findAll(), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(RespondCode.NOT_FOUND, HttpStatus.NOT_FOUND);
         }
