@@ -38,12 +38,13 @@ public class VoucherController {
 
     @PostMapping("add")
     public ResponseEntity<?> add(@Valid @RequestBody Voucher voucher) {
-        return new ResponseEntity<>(this.voucherRepository.save(voucher), HttpStatus.OK);
-
+        this.voucherRepository.save(voucher);
+        return new ResponseEntity<>(this.voucherRepository.findAllByStatus(Voucher.VoucherStatus.ENABLE.name()), HttpStatus.OK);
     }
 
     /**
      * This method will return was not expire
+     *
      * @param date
      * @return
      */
@@ -64,7 +65,8 @@ public class VoucherController {
         try {
             Optional<Voucher> voucher = this.voucherRepository.findById(id);
             voucher.get().setStatus(Voucher.VoucherStatus.DISABLE.name());
-            return new ResponseEntity<>(this.voucherRepository.save(voucher.get()), HttpStatus.OK);
+            this.voucherRepository.save(voucher.get());
+            return new ResponseEntity<>(this.voucherRepository.findAllByStatus(Voucher.VoucherStatus.ENABLE.name()), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
@@ -72,7 +74,8 @@ public class VoucherController {
 
     /**
      * This method is using to add voucher to each user
-     * @param userID is require
+     *
+     * @param userID  is require
      * @param voucher is require
      * @return HttpStatus
      */
@@ -99,7 +102,6 @@ public class VoucherController {
             return new ResponseEntity<>(RespondCode.NOT_EXISTS, HttpStatus.NOT_FOUND);
         }
     }
-
 
 
 }

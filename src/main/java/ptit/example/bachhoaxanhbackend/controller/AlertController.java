@@ -10,6 +10,7 @@ import ptit.example.bachhoaxanhbackend.utils.RespondCode;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -27,7 +28,7 @@ public class AlertController {
 
     @GetMapping("all/{userID}")
     public ResponseEntity<?> all(@PathVariable("userID") String userID) {
-        if (userID == "") {
+        if (Objects.equals(userID, "0")) {
             return new ResponseEntity<>(this.alertRepository.findAll(), HttpStatus.OK);
         }
         return new ResponseEntity<>(this.alertRepository.findAllByUserID(userID), HttpStatus.OK);

@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ptit.example.bachhoaxanhbackend.model.Category;
+import ptit.example.bachhoaxanhbackend.model.Product;
 import ptit.example.bachhoaxanhbackend.repository.CategoryRepository;
 import ptit.example.bachhoaxanhbackend.service.CategoryStorageService;
 import ptit.example.bachhoaxanhbackend.utils.RespondCode;
@@ -32,7 +33,8 @@ public class CategoryController {
 
     @PostMapping("add")
     private ResponseEntity<?> addProduct(@Valid @RequestBody Category productType) {
-        return new ResponseEntity<>(this.productTypeRepository.save(productType), HttpStatus.OK);
+        this.productTypeRepository.save(productType);
+        return new ResponseEntity<>(this.productTypeRepository.findAllByTypeStatus(Category.CategoryStatus.ENABLE.name()), HttpStatus.OK);
     }
 
     @GetMapping("load/{id}")
@@ -51,7 +53,8 @@ public class CategoryController {
         if (tempCategory.isPresent()) {
             Category currentCategory = tempCategory.get();
             currentCategory.setName(category.getName());
-            return new ResponseEntity<>(this.productTypeRepository.save(currentCategory), HttpStatus.OK);
+            this.productTypeRepository.save(currentCategory);
+            return new ResponseEntity<>(this.productTypeRepository.findAllByTypeStatus(Category.CategoryStatus.ENABLE.name()), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(RespondCode.NOT_EXISTS, HttpStatus.NOT_FOUND);
         }
@@ -63,7 +66,8 @@ public class CategoryController {
         if (tempProductType.isPresent()) {
             Category currentProductType = tempProductType.get();
             currentProductType.setTypeStatus(Category.CategoryStatus.DISABLE.name());
-            return new ResponseEntity<>(this.productTypeRepository.save(currentProductType), HttpStatus.OK);
+            this.productTypeRepository.save(currentProductType);
+            return new ResponseEntity<>(this.productTypeRepository.findAllByTypeStatus(Category.CategoryStatus.ENABLE.name()), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(RespondCode.NOT_EXISTS, HttpStatus.NOT_FOUND);
         }

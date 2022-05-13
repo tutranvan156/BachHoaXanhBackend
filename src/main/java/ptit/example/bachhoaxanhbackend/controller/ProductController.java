@@ -42,7 +42,8 @@ public class ProductController {
 
     @PostMapping("add")
     private ResponseEntity<?> addProduct(@Valid @RequestBody Product product) {
-        return new ResponseEntity<>(this.productRepository.save(product), HttpStatus.OK);
+        this.productRepository.save(product);
+        return new ResponseEntity<>(this.productRepository.findAllByStatus(Product.ProductStatus.ENABLE.name()), HttpStatus.OK);
     }
 
     @GetMapping("load/{id}")
@@ -65,8 +66,8 @@ public class ProductController {
 //        currentProduct.setDescription(product.getDescription());
 //        currentProduct.setBranch(product.getBranch());
 //        currentProduct.setIngredient(product.getIngredient());
-
-        return new ResponseEntity<>(this.productRepository.save(product), HttpStatus.OK);
+        this.productRepository.save(product);
+        return new ResponseEntity<>(this.productRepository.findAllByStatus(Product.ProductStatus.ENABLE.name()), HttpStatus.OK);
     }
 
     @DeleteMapping("delete/{id}")
@@ -75,7 +76,8 @@ public class ProductController {
         if (tempProduct.isPresent()) {
             Product product = tempProduct.get();
             product.setStatus(Product.ProductStatus.DISABLE.name());
-            return new ResponseEntity<>(this.productRepository.save(product), HttpStatus.OK);
+            this.productRepository.save(product);
+            return new ResponseEntity<>(this.productRepository.findAllByStatus(Product.ProductStatus.ENABLE.name()), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(RespondCode.NOT_EXISTS, HttpStatus.NOT_FOUND);
         }
@@ -111,7 +113,7 @@ public class ProductController {
      * */
 
     @GetMapping("/load-photo/{id}")
-    public ResponseEntity<?> getUserImage(@PathVariable("id") String id){
+    public ResponseEntity<?> getUserImage(@PathVariable("id") String id) {
 
         return new ResponseEntity<>(this.productService.getProductImage(id), HttpStatus.OK);
     }
@@ -123,12 +125,14 @@ public class ProductController {
     }
 
     @DeleteMapping("/delete-image/{id}")
-    public ResponseEntity<?> deleteUserImage(@PathVariable("id") String id){
+    public ResponseEntity<?> deleteUserImage(@PathVariable("id") String id) {
         this.productService.deleteProductImage(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
     /**
      * Get all product base on productTypeName
+     *
      * @param categoryName
      * @return
      */

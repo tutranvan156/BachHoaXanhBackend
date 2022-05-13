@@ -17,7 +17,6 @@ import javax.validation.constraints.NotEmpty;
 public class Alert {
     @Id
     private String alertID;
-    @NotEmpty
     private String userID;
     private String subject;
     private String content;
