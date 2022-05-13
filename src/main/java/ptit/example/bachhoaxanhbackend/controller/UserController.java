@@ -111,7 +111,7 @@ public class UserController {
                 //update otp code in database
                 MongoDatabase database = MongoUtils.getInstance();
                 BasicDBObject search = new BasicDBObject();
-                search.append("_id", new ObjectId(userPasswordDTO.getId()));
+                search.append("_id", userPasswordDTO.getId());
                 BasicDBObject update = new BasicDBObject();
                 update.append("$set", new BasicDBObject().append("otp", otp));
                 database.getCollection("user").updateOne(search, update);
