@@ -32,7 +32,7 @@ public class Voucher {
     @Positive
     private Double maxDiscountValue;
 
-    private String isUse;
+    private String isUse = IsUse.FALSE.name();
     /**
      * two field below must get in format with millisecond
      */
@@ -45,4 +45,11 @@ public class Voucher {
         ENABLE,
         DISABLE
     }
+
+    public enum IsUse {
+        TRUE,
+        FALSE
+    }
+
+
 }

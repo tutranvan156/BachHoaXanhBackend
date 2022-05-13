@@ -36,12 +36,17 @@ public class OrderService {
 
     public Order addOrder(Order currentOrder) throws ValidationException {
 
-        List<ProductCart> productCartList = currentOrder.getListProductCart();
-        if (productCartList == null) {
+        User tempUser = this.userRepository.findById(currentOrder.getUserID()).get();
+        List<ProductCart> productOrderList = currentOrder.getListProductCart();
+        List<ProductCart> productCartList = tempUser.getUserListCart();
+        if (productOrderList == null) {
             throw new ValidationException("listProductCart:  must_not_empty");
         }
 
-        for (ProductCart item : productCartList) {
+        /**
+         * This block of code is using to check if product is out of stock
+         */
+        for (ProductCart item : productOrderList) {
             Optional<Product> temp = this.productRepository.findById(item.getProductID());
             if (temp.isPresent()) {
                 Product product = temp.get();
@@ -54,44 +59,69 @@ public class OrderService {
                 throw new ValidationException(RespondCode.NOT_EXISTS);
             }
         }
+        /**
+         * This block of code is using to update voucher status when user using it in order
+         */
+        if (currentOrder.getVoucherID() != null) {
+            List<Voucher> voucherList = tempUser.getUserListVoucher();
+            for (Voucher item : voucherList) {
+                if (item.getVoucherID().equals(currentOrder.getVoucherID())) {
+                    item.setIsUse(Voucher.IsUse.TRUE.name());
+                    tempUser.setUserListVoucher(voucherList);
+                    break;
+                }
+            }
+        }
+        /**
+         * End of update userVoucherList
+         */
 
-        //after check if we can go through all without exception, then we will decrease quantity value of each product
-        //after check then I will decrease value of each product
-        double tempSum = 0;
-        for (ProductCart item : productCartList) {
+        /**
+         * after check if we can go through all without exception,
+         * then we will decrease quantity value of each product
+         * after check then I will decrease value of each product
+         */
+
+        for (ProductCart item : productOrderList) {
             Optional<Product> temp = this.productRepository.findById(item.getProductID());
             if (temp.isPresent()) {
                 Product product = temp.get();
                 int remainProduct = product.getQuantity();
-                tempSum += item.getPriceDiscount() * item.getQuantity();
-                //check if product is out of stock
                 product.setQuantity(remainProduct - item.getQuantity());
                 this.productRepository.save(product);
             } else {
                 throw new ValidationException(RespondCode.NOT_EXISTS);
             }
+            /**
+             * This block of code using to desc value of product in cartList of user when user create order
+             */
+            for (int i = 0; i < productCartList.size(); i++) {
+                ProductCart itemCartList = productCartList.get(i);
+                if (item.getProductID().equals(itemCartList.getProductID())) {
+                    int productQuantityCart = itemCartList.getQuantity();
+                    int productQuantityOrder = item.getQuantity();
+                    int remainQuantity = productQuantityCart - productQuantityOrder;
+                    /**
+                     * Check if remainQuantity = 0 then remove this product out of userCartList
+                     */
+                    if (remainQuantity == 0) {
+                        productCartList.remove(i);
+                    } else {
+                        itemCartList.setQuantity(productQuantityCart - productQuantityOrder);
+                    }
+                    /**
+                     * Then break
+                     */
+                    break;
+                }
+            }
         }
-
-
-        //calculate discount using voucher
-//        Voucher voucher = currentOrder.getVoucher();
-//        double discountVoucher = tempSum * voucher.getDiscountValue() / 100 <= voucher.getMaxDiscountValue() ? tempSum * voucher.getDiscountValue() / 100 : voucher.getMaxDiscountValue();
-//
-//        Optional<User> tempUser = this.userRepository.findById(currentOrder.getUserID());
-//        User user = tempUser.get();
-//        List<Voucher> voucherList = user.getUserListVoucher();
-//        for (Voucher item : voucherList) {
-//            if (item.getVoucherID().equals(voucher.getVoucherID())) {
-//                item.setStatus(Voucher.VoucherStatus.DISABLE.name());
-//                break;
-//            }
-//        }
-//        //update voucher status in voucher list of user
-//        this.userRepository.save(user);
-//        tempSum -= discountVoucher;
-//        //check if user is voucher slayer =)))))
-//        if (tempSum <= 0) tempSum = 0;
-//        currentOrder.setTotalMoney(tempSum);
+        /**
+         * After adjust productCartList then save it again into database
+         */
+        tempUser.setUserListCart(productCartList);
+        this.userRepository.save(tempUser);
+        //update order in database
         return this.orderRepository.save(currentOrder);
     }
 
@@ -113,7 +143,7 @@ public class OrderService {
                     product.setQuantity(remainProduct + item.getQuantity());
                     this.productRepository.save(product);
                 } else {
-                    throw new ValidationException(temp.get().getProductID() + " " + RespondCode.NOT_EXISTS);
+                    throw new ValidationException(item.getProductID() + " " + RespondCode.NOT_EXISTS);
                 }
             }
             /**

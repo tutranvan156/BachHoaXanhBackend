@@ -35,4 +35,5 @@ public class Order {
     private String shippingAddress;
     private List<ProductCart> listProductCart;
     private Double voucherDiscount;
+    private String voucherID;
 }
