@@ -22,21 +22,16 @@ public class Order {
     private String orderID;
     @NotEmpty
     private String userID;
-    private String orderStatus = OrderStatus.CREATE.name();
+    private String orderStatus = OrderStatus.PENDING.name();
     public enum OrderStatus {
-        CREATE,
-        PROCESS,
+        PENDING,
+        DELIVERING,
         TERMINATED,
-        DONE
+        RECEIVED
     }
     private long dateCreate = System.currentTimeMillis();
     private long dateDelivery;
     @NotEmpty
     private String shippingAddress;
     private List<ProductCart> listProductCart;
-    private Voucher voucher;
-    @Positive
-    private Double totalMoney;
-    private Double voucherDiscount;
-
 }

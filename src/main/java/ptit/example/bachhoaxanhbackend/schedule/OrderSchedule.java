@@ -39,7 +39,7 @@ public class OrderSchedule {
         long currentTime = System.currentTimeMillis();
 
         logger.info("Start filter expire order in create stage at : " + currentTime);
-        List<Order> orderList = this.orderRepository.findAllByOrderStatus(Order.OrderStatus.CREATE.name());
+        List<Order> orderList = this.orderRepository.findAllByOrderStatus(Order.OrderStatus.PENDING.name());
         final long TIME_ONE_DAY = 86400000;
         for (Order item : orderList) {
             long dateCreateAfterThreeDay = item.getDateCreate() + TIME_ONE_DAY * 3;

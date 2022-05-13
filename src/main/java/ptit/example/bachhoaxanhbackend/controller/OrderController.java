@@ -75,7 +75,7 @@ public class OrderController {
         Optional<Order> temp = this.orderRepository.findById(orderID);
         if (temp.isPresent()) {
             Order order = temp.get();
-            order.setOrderStatus(Order.OrderStatus.PROCESS.name());
+            order.setOrderStatus(Order.OrderStatus.DELIVERING.name());
             return new ResponseEntity<>(this.orderRepository.save(order), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(RespondCode.NOT_FOUND, HttpStatus.NOT_FOUND);
@@ -104,7 +104,7 @@ public class OrderController {
         Optional<Order> temp = this.orderRepository.findById(orderID);
         if (temp.isPresent()) {
             Order order = temp.get();
-            order.setOrderStatus(Order.OrderStatus.DONE.name());
+            order.setOrderStatus(Order.OrderStatus.RECEIVED.name());
             return new ResponseEntity<>(this.orderRepository.save(order), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(RespondCode.NOT_FOUND, HttpStatus.NOT_FOUND);

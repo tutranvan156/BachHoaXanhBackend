@@ -24,7 +24,6 @@ public class ProductCart {
     private Double priceDiscount;
     @Positive
     private Double discountPercent;
-    private long addDate = System.currentTimeMillis();
     @Positive
     private int quantity = 1;
 

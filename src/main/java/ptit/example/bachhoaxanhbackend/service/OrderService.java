@@ -74,24 +74,24 @@ public class OrderService {
 
 
         //calculate discount using voucher
-        Voucher voucher = currentOrder.getVoucher();
-        double discountVoucher = tempSum * voucher.getDiscountValue() / 100 <= voucher.getMaxDiscountValue() ? tempSum * voucher.getDiscountValue() / 100 : voucher.getMaxDiscountValue();
-
-        Optional<User> tempUser = this.userRepository.findById(currentOrder.getUserID());
-        User user = tempUser.get();
-        List<Voucher> voucherList = user.getUserListVoucher();
-        for (Voucher item : voucherList) {
-            if (item.getVoucherID().equals(voucher.getVoucherID())) {
-                item.setStatus(Voucher.VoucherStatus.DISABLE.name());
-                break;
-            }
-        }
-        //update voucher status in voucher list of user
-        this.userRepository.save(user);
-        tempSum -= discountVoucher;
-        //check if user is voucher slayer =)))))
-        if (tempSum <= 0) tempSum = 0;
-        currentOrder.setTotalMoney(tempSum);
+//        Voucher voucher = currentOrder.getVoucher();
+//        double discountVoucher = tempSum * voucher.getDiscountValue() / 100 <= voucher.getMaxDiscountValue() ? tempSum * voucher.getDiscountValue() / 100 : voucher.getMaxDiscountValue();
+//
+//        Optional<User> tempUser = this.userRepository.findById(currentOrder.getUserID());
+//        User user = tempUser.get();
+//        List<Voucher> voucherList = user.getUserListVoucher();
+//        for (Voucher item : voucherList) {
+//            if (item.getVoucherID().equals(voucher.getVoucherID())) {
+//                item.setStatus(Voucher.VoucherStatus.DISABLE.name());
+//                break;
+//            }
+//        }
+//        //update voucher status in voucher list of user
+//        this.userRepository.save(user);
+//        tempSum -= discountVoucher;
+//        //check if user is voucher slayer =)))))
+//        if (tempSum <= 0) tempSum = 0;
+//        currentOrder.setTotalMoney(tempSum);
         return this.orderRepository.save(currentOrder);
     }
 
@@ -119,22 +119,22 @@ public class OrderService {
             /**
              * This block of code using to roll back voucher when user terminate order process
              */
-            String userID = order.getUserID();
-            Optional<User> tempUser = this.userRepository.findById(userID);
-
-            User user = tempUser.get();
-            List<Voucher> voucherList = user.getUserListVoucher();
+//            String userID = order.getUserID();
+//            Optional<User> tempUser = this.userRepository.findById(userID);
+//
+//            User user = tempUser.get();
+//            List<Voucher> voucherList = user.getUserListVoucher();
             //todo: check this one again because current user in database didn't have listVoucher
-            if (voucherList != null) {
-                for (Voucher item : voucherList) {
-                    if (item.getVoucherID().equals(order.getVoucher().getVoucherID())) {
-                        item.setStatus(Voucher.VoucherStatus.ENABLE.name());
-                        break;
-                    }
-                }
-                //update voucher status in voucher list of user
-                this.userRepository.save(user);
-            }
+//            if (voucherList != null) {
+//                for (Voucher item : voucherList) {
+//                    if (item.getVoucherID().equals(order.getVoucher().getVoucherID())) {
+//                        item.setStatus(Voucher.VoucherStatus.ENABLE.name());
+//                        break;
+//                    }
+//                }
+//                //update voucher status in voucher list of user
+//                this.userRepository.save(user);
+//            }
             /**
              * End of roll back voucher
              */
