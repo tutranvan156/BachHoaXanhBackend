@@ -3,7 +3,6 @@ package ptit.example.bachhoaxanhbackend.repository;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 import ptit.example.bachhoaxanhbackend.model.Alert;
-import ptit.example.bachhoaxanhbackend.model.Product;
 
 import java.util.List;
 

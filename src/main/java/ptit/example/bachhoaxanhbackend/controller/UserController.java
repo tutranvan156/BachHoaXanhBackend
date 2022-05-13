@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ptit.example.bachhoaxanhbackend.dto.ProductCart;
 import ptit.example.bachhoaxanhbackend.dto.UserPasswordDTO;
 import ptit.example.bachhoaxanhbackend.model.User;
 import ptit.example.bachhoaxanhbackend.mongodb.MongoUtils;
@@ -22,6 +23,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -194,6 +196,26 @@ public class UserController {
     public ResponseEntity<?> deleteUserImage(@PathVariable("id") String id){
         userService.deleteUserImage(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("delete-product-from-cart/{userID}/{productID}")
+    public ResponseEntity<?> deleteProductFromCart(@PathVariable("userID") String userID, @PathVariable("productID") String productID) {
+        Optional<User> tempUser = this.userRepository.findById(userID);
+        if (tempUser.isPresent()) {
+            User user = tempUser.get();
+            List<ProductCart> productCartList = user.getUserListCart();
+            for (int i = 0; i < productCartList.size(); i++) {
+                ProductCart tempProduct = productCartList.get(i);
+                if (tempProduct.getProductID().equals(productID)) {
+                    productCartList.remove(i);
+                    break;
+                }
+            }
+            user.setUserListCart(productCartList);
+            return new ResponseEntity<>(this.userRepository.save(user), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(RespondCode.NOT_EXISTS, HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

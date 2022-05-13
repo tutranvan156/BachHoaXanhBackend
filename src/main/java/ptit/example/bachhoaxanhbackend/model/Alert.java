@@ -21,6 +21,10 @@ public class Alert {
     private String userID;
     private String subject;
     private String content;
-    private String isRead;
+    private String isRead = AlertStatus.FALSE.name();
     private long date;
+    public enum AlertStatus {
+        TRUE,
+        FALSE
+    }
 }
