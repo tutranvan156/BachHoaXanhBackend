@@ -98,17 +98,7 @@ public class OrderService {
             for (int i = 0; i < productCartList.size(); i++) {
                 ProductCart itemCartList = productCartList.get(i);
                 if (item.getProductID().equals(itemCartList.getProductID())) {
-                    int productQuantityCart = itemCartList.getQuantity();
-                    int productQuantityOrder = item.getQuantity();
-                    int remainQuantity = productQuantityCart - productQuantityOrder;
-                    /**
-                     * Check if remainQuantity = 0 then remove this product out of userCartList
-                     */
-                    if (remainQuantity == 0) {
-                        productCartList.remove(i);
-                    } else {
-                        itemCartList.setQuantity(productQuantityCart - productQuantityOrder);
-                    }
+                    productCartList.remove(i);
                     /**
                      * Then break
                      */
