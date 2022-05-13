@@ -1,10 +1,14 @@
 package ptit.example.bachhoaxanhbackend.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
+import ptit.example.bachhoaxanhbackend.dto.ProductCart;
+import ptit.example.bachhoaxanhbackend.model.User;
+import ptit.example.bachhoaxanhbackend.repository.UserRepository;
 import ptit.example.bachhoaxanhbackend.service.ProductService;
 import ptit.example.bachhoaxanhbackend.storage.StorageException;
 import ptit.example.bachhoaxanhbackend.storage.StorageFileNotFoundException;
@@ -17,9 +21,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 
 @Service
 public class ProductServiceImpl implements ProductService {
+    @Autowired
+    private UserRepository userRepository;
     private final Path productLocation;
 
     public ProductServiceImpl(StorageProperties properties) {
@@ -72,5 +79,23 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProductImage(String filename) {
         FileSystemUtils.deleteRecursively(this.productLocation.resolve(filename).toFile());
+    }
+
+    /**
+     * Delete all product in userCartList when delete product
+     * @param productID
+     */
+    public void  deleteProduct(String productID) {
+        List<User> userList = this.userRepository.findAllByStatus(User.UserStatus.ENABLE.name());
+        for (User itemUser : userList) {
+            List<ProductCart> productCartList = itemUser.getUserListCart();
+            for (int i = 0; i < productCartList.size(); i++) {
+                if (productCartList.get(i).getProductID().equals(productID)) {
+                    productCartList.remove(i);
+                }
+            }
+            itemUser.setUserListCart(productCartList);
+            this.userRepository.save(itemUser);
+        }
     }
 }

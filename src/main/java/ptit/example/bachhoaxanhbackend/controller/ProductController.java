@@ -11,6 +11,7 @@ import ptit.example.bachhoaxanhbackend.model.User;
 import ptit.example.bachhoaxanhbackend.repository.ProductRepository;
 import ptit.example.bachhoaxanhbackend.repository.UserRepository;
 import ptit.example.bachhoaxanhbackend.service.ProductService;
+import ptit.example.bachhoaxanhbackend.service.impl.ProductServiceImpl;
 import ptit.example.bachhoaxanhbackend.utils.RespondCode;
 
 import javax.validation.Valid;
@@ -29,6 +30,7 @@ public class ProductController {
 
     @Autowired
     ProductService productService;
+
     @Autowired
     private ProductRepository productRepository;
 
@@ -77,6 +79,7 @@ public class ProductController {
             Product product = tempProduct.get();
             product.setStatus(Product.ProductStatus.DISABLE.name());
             this.productRepository.save(product);
+            this.productService.deleteProduct(id);
             return new ResponseEntity<>(this.productRepository.findAllByStatus(Product.ProductStatus.ENABLE.name()), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(RespondCode.NOT_EXISTS, HttpStatus.NOT_FOUND);

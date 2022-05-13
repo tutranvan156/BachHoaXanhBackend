@@ -21,4 +21,5 @@ public interface ProductService {
     Resource getProductImage(String filename);
 
     void deleteProductImage(String filename);
+    void deleteProduct(String productID);
 }

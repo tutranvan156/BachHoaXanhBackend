@@ -34,4 +34,5 @@ public class Order {
     @NotEmpty
     private String shippingAddress;
     private List<ProductCart> listProductCart;
+    private Double voucherDiscount;
 }

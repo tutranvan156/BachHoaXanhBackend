@@ -8,6 +8,7 @@ import ptit.example.bachhoaxanhbackend.model.User;
 import ptit.example.bachhoaxanhbackend.model.Voucher;
 import ptit.example.bachhoaxanhbackend.repository.UserRepository;
 import ptit.example.bachhoaxanhbackend.repository.VoucherRepository;
+import ptit.example.bachhoaxanhbackend.service.VoucherService;
 import ptit.example.bachhoaxanhbackend.utils.RespondCode;
 
 import javax.validation.Valid;
@@ -30,6 +31,9 @@ public class VoucherController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private VoucherService voucherService;
 
     @GetMapping("all")
     public ResponseEntity<?> all() {
@@ -66,6 +70,7 @@ public class VoucherController {
             Optional<Voucher> voucher = this.voucherRepository.findById(id);
             voucher.get().setStatus(Voucher.VoucherStatus.DISABLE.name());
             this.voucherRepository.save(voucher.get());
+            this.voucherService.deleteVoucher(id);
             return new ResponseEntity<>(this.voucherRepository.findAllByStatus(Voucher.VoucherStatus.ENABLE.name()), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
