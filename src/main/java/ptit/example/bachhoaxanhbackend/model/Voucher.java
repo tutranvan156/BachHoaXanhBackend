@@ -32,7 +32,7 @@ public class Voucher {
     @Positive
     private Double maxDiscountValue;
 
-    private boolean isUse;
+    private String isUse;
     /**
      * two field below must get in format with millisecond
      */
