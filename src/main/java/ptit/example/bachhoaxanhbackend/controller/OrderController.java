@@ -34,6 +34,11 @@ public class OrderController {
     @Autowired
     private UserRepository userRepository;
 
+    @GetMapping("all")
+    private ResponseEntity<?> getAll() {
+        return new ResponseEntity<>(this.orderRepository.findAll(), HttpStatus.OK);
+    }
+
     @GetMapping("load-order-user/{userID}")
     private ResponseEntity<?> loadOrderUser(@PathVariable("userID") String userID) {
         List<Order> orderList = this.orderRepository.findOrderByUserID(userID);
