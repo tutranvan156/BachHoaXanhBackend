@@ -15,7 +15,7 @@ public class JavaMailSender {
 
     public static void sendMail(String otp, String userEmail) throws AddressException, MessagingException, IOException {
         final String MAIL_ADDRESS = "tutranvan154@gmail.com";
-        final String MAIL_PASSWORD = "laptrinhandroid";
+        final String MAIL_PASSWORD = "juabwgtycnqvppua";
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
