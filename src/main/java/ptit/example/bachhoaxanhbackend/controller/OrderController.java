@@ -113,6 +113,7 @@ public class OrderController {
         if (temp.isPresent()) {
             Order order = temp.get();
             order.setOrderStatus(Order.OrderStatus.RECEIVED.name());
+            order.setDateDelivery(System.currentTimeMillis());
             this.orderRepository.save(order);
             return new ResponseEntity<>(this.orderRepository.findAll(), HttpStatus.OK);
         } else {
