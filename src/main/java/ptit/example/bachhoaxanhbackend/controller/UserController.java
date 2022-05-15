@@ -103,7 +103,7 @@ public class UserController {
      * @return
      */
 
-    private static final Logger logger = LoggerFactory.getLogger(OrderSchedule.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     @PostMapping("/forgot-password")
     private ResponseEntity<?> updateOTP(@RequestBody UserPasswordDTO userPasswordDTO) {
         logger.info(userPasswordDTO.toString());
