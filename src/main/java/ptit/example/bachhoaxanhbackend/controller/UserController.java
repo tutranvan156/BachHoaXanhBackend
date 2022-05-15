@@ -2,7 +2,10 @@ package ptit.example.bachhoaxanhbackend.controller;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoDatabase;
+import lombok.extern.java.Log;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +16,7 @@ import ptit.example.bachhoaxanhbackend.dto.UserPasswordDTO;
 import ptit.example.bachhoaxanhbackend.model.User;
 import ptit.example.bachhoaxanhbackend.mongodb.MongoUtils;
 import ptit.example.bachhoaxanhbackend.repository.UserRepository;
+import ptit.example.bachhoaxanhbackend.schedule.OrderSchedule;
 import ptit.example.bachhoaxanhbackend.service.UserService;
 import ptit.example.bachhoaxanhbackend.utils.JavaMailSender;
 import ptit.example.bachhoaxanhbackend.utils.RespondCode;
@@ -98,9 +102,11 @@ public class UserController {
      * @param
      * @return
      */
+
+    private static final Logger logger = LoggerFactory.getLogger(OrderSchedule.class);
     @PostMapping("/forgot-password")
     private ResponseEntity<?> updateOTP(@RequestBody UserPasswordDTO userPasswordDTO) {
-        System.out.println(userPasswordDTO);
+        logger.info(userPasswordDTO.toString());
         //Get otp code
         String otp = Utils.generateOTP();
         //Send to customer email
