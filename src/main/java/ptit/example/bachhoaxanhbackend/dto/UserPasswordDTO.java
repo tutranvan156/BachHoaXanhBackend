@@ -14,4 +14,14 @@ public class UserPasswordDTO {
     private String otp;
     private String emailAddress;
     private String password;
+
+    @Override
+    public String toString() {
+        return "UserPasswordDTO{" +
+                "id='" + id + '\'' +
+                ", otp='" + otp + '\'' +
+                ", emailAddress='" + emailAddress + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }

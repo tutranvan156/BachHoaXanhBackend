@@ -100,6 +100,7 @@ public class UserController {
      */
     @PostMapping("/forgot-password")
     private ResponseEntity<?> updateOTP(@RequestBody UserPasswordDTO userPasswordDTO) {
+        System.out.println(userPasswordDTO);
         //Get otp code
         String otp = Utils.generateOTP();
         //Send to customer email
