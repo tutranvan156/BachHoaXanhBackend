@@ -17,6 +17,7 @@ import javax.validation.constraints.*;
 public class Product {
     @Id
     private String productID;
+    private String productImage;
     @NotEmpty
     private String name;
     @Positive

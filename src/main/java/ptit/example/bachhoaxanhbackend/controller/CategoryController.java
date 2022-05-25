@@ -53,6 +53,7 @@ public class CategoryController {
         if (tempCategory.isPresent()) {
             Category currentCategory = tempCategory.get();
             currentCategory.setName(category.getName());
+            currentCategory.setCategoryImage(category.getCategoryImage());
             this.productTypeRepository.save(currentCategory);
             return new ResponseEntity<>(this.productTypeRepository.findAllByTypeStatus(Category.CategoryStatus.ENABLE.name()), HttpStatus.OK);
         } else {

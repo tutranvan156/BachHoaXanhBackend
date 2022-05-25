@@ -18,6 +18,7 @@ public class Category {
 
     @Id
     private String categoryID;
+    private String categoryImage;
     @NotEmpty
     private String name;
     private String typeStatus = CategoryStatus.ENABLE.name();

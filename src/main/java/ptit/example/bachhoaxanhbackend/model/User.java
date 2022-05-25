@@ -20,6 +20,7 @@ import java.util.List;
 public class User {
     @Id
     private String userID;
+    private String userImage;
     @NotEmpty
     private String fullName;
     @NotEmpty
