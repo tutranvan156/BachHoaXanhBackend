@@ -1,5 +1,8 @@
 package ptit.example.bachhoaxanhbackend.controller;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoDatabase;
 import lombok.extern.java.Log;
@@ -108,6 +111,7 @@ public class UserController {
     private ResponseEntity<?> updateOTP(@RequestBody UserPasswordDTO userPasswordDTO) {
 //        logger.info(userPasswordDTO.toString());
         //Get otp code
+        System.out.println("go to this");
         String otp = Utils.generateOTP();
         //Send to customer email
         if (userPasswordDTO.getEmailAddress() == null) {
@@ -124,7 +128,8 @@ public class UserController {
                 database.getCollection("user").updateOne(search, update);
 
                 //return success result
-                return new ResponseEntity<>(RespondCode.SUCCESS, HttpStatus.OK);
+                String jsonString = "{'otp' : " + otp + "}";
+                return new ResponseEntity<>(jsonString, HttpStatus.OK);
             } catch (MessagingException | IOException e) {
                 return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
             }
