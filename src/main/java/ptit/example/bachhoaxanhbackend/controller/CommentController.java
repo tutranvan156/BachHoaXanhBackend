@@ -25,7 +25,7 @@ public class CommentController {
      * - /load/commentID - xem 1 bình luận
      * - /add - thêm một bình luận (userID, productID, content, date, startNumber)
      * - không có chỉnh sửa bình luận
-     * - /delete/commentID - xóa 1 bình luận
+     * - /delete/commentID - xóa 1 bình luaan
      * *****
      * - /load/by-product/productID - xem tất cả bình luận của một sản phẩm
      * - /load/by-user/userID - xem tất cả bình luận của một người dùng
